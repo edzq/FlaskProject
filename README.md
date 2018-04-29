@@ -6,11 +6,18 @@
 
 
 结构如下：
+
   loginout
+  
       | templates
+      
         | login.html
+        
         | regist.html
+        
       main.py
+      
+      
  method 使用了get，登陆和注册的action为/login和/registuser
  
  第一次使用MySQL 在regist中把前台的账号名和密码插入到数据库中（创建好的user表单中）
