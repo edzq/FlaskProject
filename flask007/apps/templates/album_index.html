@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 10px 20px">
+        <h2>相册首页</h2>
+        <p>
+            在这里你可以上传，管理，分享自己的相册，也可以浏览，收藏别人的相册！
+        </p>
+    </div>
+
+    <a href="{{ url_for("album_create") }}" style="display: inline-block" class="btn btn-primary">
+        创建新的相册
+    </a>
+    <a href="{{ url_for("album_upload") }}" style="display: inline-block" class="btn btn-primary">
+        更新已有相册
+    </a>
+    <a href="{{ url_for("album_list") }}" style="display: inline-block" class="btn btn-primary">
+        相册列表
+    </a>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-6").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}
+

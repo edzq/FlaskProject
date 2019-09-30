@@ -1,0 +1,117 @@
+{% extends "home/layout.html" %}
+{% import "home/macro_paginate.html" as paginator %}
+
+{% block content %}
+
+    <div class="col-md-12">
+        <div>
+            <a style="display: inline-block;font-size: larger;
+        margin: 5px 5px" href="{{ url_for("home.movie_list",page=1,area=0,tag=p['tag'],star=p['star']) }}">
+                所有地区</a>
+            <a style="display: inline-block;font-size: larger;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area='内地',tag=p['tag'],star=p['star']) }}">
+                内地
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area='港台',tag=p['tag'],star=p['star']) }}">
+                港台
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area='北美',tag=p['tag'],star=p['star']) }}">
+                北美
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area='日韩',tag=p['tag'],star=p['star']) }}">
+                日韩
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area='东南亚',tag=p['tag'],star=p['star']) }}">
+                东南亚
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area='欧洲',tag=p['tag'],star=p['star']) }}">
+                欧洲
+            </a>
+        </div>
+        <div>
+            <a style="display: inline-block;font-size: larger;
+        margin: 5px 5px" href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=0,star=p['star']) }}">所有分类</a>
+            {% for titem in movie_tags %}
+                <a style="display: inline-block;font-size: large;margin: 5px 5px"
+                   href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=titem.id,star=p['star']) }}">
+                    {{ titem.name }}
+                </a>
+            {% endfor %}
+        </div>
+        <div>
+            <a style="display: inline-block;font-size: larger;
+        margin: 5px 5px" href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=p['tag'],star=0) }}">所有星级</a>
+            <a style="display: inline-block;font-size: larger;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=p['tag'],star=1) }}">
+                1星
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=p['tag'],star=2) }}">
+                2星
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=p['tag'],star=3) }}">
+                3星
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=p['tag'],star=4) }}">
+                4星
+            </a>
+            <a style="display: inline-block;font-size: large;margin: 5px 5px"
+               href="{{ url_for("home.movie_list",page=1,area=p['area'],tag=p['tag'],star=5) }}">
+                5星
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <hr/>
+    </div>
+
+    <div class="col-md-12 text-center">
+        {% for mitem in movies.items %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ mitem.title }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("home.movie_play",id=mitem.id) }}">
+                                    <img src="{{ mitem.cover_url }}"
+                                         width="250px" height="180px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>播放量({{ mitem.clicknum }}) </span>
+                                <span> 收藏量({{ mitem.favornum }})</span>
+                                <span> 评论量({{ mitem.commtnum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-md-12 text-center">
+            {{ paginator.paginate(movies,'home.movie_list') }}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $("#nav-9").addClass('active')
+        })
+    </script>
+{% endblock %}

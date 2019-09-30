@@ -1,0 +1,129 @@
+{% extends "home/layout.html" %}
+{% import 'home/macro_paginate.html' as paginator %}
+{#{% block css_style %}#}
+{# #}
+{#{% endblock %}#}
+
+{% block content %}
+    <div class="col-md-12 text-center">
+        <div style="float: left;width: 16%;">
+            <a href="{{ url_for('home.music_list',page=1,lid=0,sid=p['sid'],
+                       tid=p['tid'],eid=p['eid'],scid=p['scid']) }}">
+                <h4>语种</h4>
+            </a>
+            <ul style="font-size: 17px;">
+                {% for ltag in lang_tags %}
+                    <a style="padding-right: 20px"
+                       href="{{ url_for('home.music_list',page=1,lid=ltag.id,sid=p['sid'],
+                       tid=p['tid'],eid=p['eid'],scid=p['scid']) }}">{{ ltag.name }}</a>
+                    {% if loop.index % 2 ==0 %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="float: left; width: 21%;">
+            <a href="{{ url_for('home.music_list',page=1,lid=p['lid'],sid=0,
+                       tid=p['tid'],eid=p['eid'],scid=p['scid']) }}">
+                <h4>流派</h4>
+            </a>
+            <ul style="font-size: 17px;">
+                {% for stag in style_tags %}
+                    <a style="padding-right: 20px"
+                       href="{{ url_for('home.music_list',page=1,lid=p['lid'],sid=stag.id,
+                       tid=p['tid'],eid=p['eid'],scid=p['scid']) }}">{{ stag.name }}</a>
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="float: left; width: 21%;">
+            <a href="{{ url_for('home.music_list',page=1,lid=p['lid'],sid=p['sid'],
+                       tid=0,eid=p['eid'],scid=p['scid']) }}">
+                <h4>主题</h4>
+            </a>
+            <ul style="font-size: 17px;">
+                {% for ttag in theme_tags %}
+                    <a style="padding-right: 20px" href="{{ url_for('home.music_list',page=1,
+                    lid=p['lid'],sid=p['sid'],tid=ttag.id,eid=p['eid'],scid=p['scid']) }}">{{ ttag.name }}</a>
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="float: left; width: 21%;">
+            <a href="{{ url_for('home.music_list',page=1,lid=p['lid'],sid=p['sid'],
+                       tid=p['tid'],eid=0,scid=p['scid']) }}">
+                <h4>心情</h4>
+            </a>
+            <ul style="font-size: 17px;">
+                {% for etag in emotion_tags %}
+                    <a style="padding-right: 20px" href="{{ url_for('home.music_list',page=1,
+                    lid=p['lid'],sid=p['sid'],tid=p['tid'],eid=etag.id,scid=p['scid']) }}">
+                        {{ etag.name }}</a>
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="float: left; width: 21%;">
+            <a href="{{ url_for('home.music_list',page=1,lid=p['lid'],sid=p['sid'],
+                       tid=p['tid'],eid=p['eid'],scid=0) }}">
+                <h4>场景</h4>
+            </a>
+            <ul style="font-size: 17px;">
+                {% for sctag in scene_tags %}
+                    <a style="padding-right: 20px" href="{{ url_for('home.music_list',page=1,
+                    lid=p['lid'],sid=p['sid'],tid=p['tid'],eid=p['eid'],scid=sctag.id) }}">
+                        {{ sctag.name }}</a>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <hr/>
+    </div>
+    <div class="col-md-12 text-center">
+        {% for mitem in musics.items %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ mitem.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ mitem.singer }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for('home.music_listen',id=mitem.id) }}">
+                                    <img src="{{ mitem.cover_url }}"
+                                         width="250px" height="180px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>播放量({{ mitem.clicknum }}) </span>
+                                <span> 收藏量({{ mitem.favornum }})</span>
+                                <span> 评论量({{ mitem.commtnum }})</span>
+                            </div>
+                            <div>
+                                <audio src="{{ mitem.audio_url }}"
+                                       controls="controls" preload="none" style="width: 250px"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-md-12 text-center">
+            {{ paginator.paginate(musics,'home.music_list') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-8").addClass('active');
+            }
+        );
+    </script>
+{% endblock %}
+

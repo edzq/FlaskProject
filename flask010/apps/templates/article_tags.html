@@ -1,0 +1,12 @@
+<div class="list-group side-bar">
+    <a id="item-0" class="list-group-item"
+       href="{{ url_for('article_list',page=1) }}">
+        全部分类
+    </a>
+    {% for tag in articletags %}
+        <a id="item-{{ tag.id }}" class="list-group-item"
+           href="{{ url_for('article_list',page=1,tid=tag.id) }}">
+            {{ tag.name }}
+        </a>
+    {% endfor %}
+</div>

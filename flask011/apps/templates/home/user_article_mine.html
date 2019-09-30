@@ -1,0 +1,79 @@
+{% extends "home/layout.html" %}
+{% import "home/macro_paginate.html" as paginator %}
+{% block content %}
+
+    <div class="jumbotron" style="padding: 5px 20px">
+        <h2>{{ session.get("user_name") }}的个人中心</h2>
+    </div>
+
+    <div>
+        {% include "home/user_menu.html" %}
+
+        <div class="col-md-10">
+            <a style="display: inline-block;font-size: x-large;
+        margin: 5px 5px" href="{{ url_for("home.user_article_mine",page=1) }}">所有分类</a>
+            {% for item in articletags %}
+                <a style="display: inline-block;font-size: larger;margin: 5px 5px"
+                   href="{{ url_for("home.user_article_mine",page=1,tag=item.id) }}">
+                    {{ item.name }}
+                </a>
+            {% endfor %}
+
+            <div class="list-group">
+                {% for item in articles.items %}
+                    <div class="list-group-item clearfix">
+                        <div class="col-xs-2">
+                            <a href="{{ url_for("home.article_read",id=item.id) }}">
+                                <img src="{{ item.coverimgurl }}" width="100px" height="60px">
+                            </a>
+                        </div>
+                        <div class="col-xs-8">
+                            <a href="{{ url_for("home.article_read",id=item.id) }}">
+                                <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                                {{ item.title }}</span>
+                            </a><br>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">
+                                <i class="glyphicon glyphicon-user"></i>
+                                作者：{{ item.user.name }} </span><i class="glyphicon glyphicon-apple"></i>
+                            <span>阅读量：{{ item.clicknum }} </span><i class="glyphicon glyphicon-apple"></i>
+                            <span>收藏量：{{ item.favornum }}</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <a style="display: inline-block; color: red"
+                               href="{{ url_for('home.user_article_mine_modify',id=item.id) }}">
+                                设置文章信息
+                            </a>
+
+                            <a style="display: inline-block; color: red"
+                               href="{{ url_for('home.article_write',aid=item.id) }}">
+                                编辑文章内容
+                            </a>
+                            <a style="display: inline-block;color: red"
+                               href="{{ url_for('home.user_article_mine_del',id=item.id) }}">
+                                删除文章
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="col-md-12 text-center">
+                    {{ paginator.paginate(articles,"home.user_article_mine") }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#item-7").addClass('list-group-item-success');
+            }
+        );
+    </script>
+{% endblock %}

@@ -1,0 +1,274 @@
+{% extends "home/layout.html" %}
+
+{% block css_style %}
+    <link href="{{ url_for("static", filename="custom/custom.css") }}"
+          rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <!--电影播放和详情区域-->
+    <div class="col-md-12">
+        <div class="col-md-4" style="height:360px">
+            <div class="pannel">
+                <div class="panel-heading panel-success" style="font-size: 25px">电影详情</div>
+                <div class="panel-body">
+                    <p style="font-size: 20px">标题：{{ movie.title }}</p>
+                    <p style="font-size: 20px">导演：西交浪人</p>
+                    <p style="font-size: 20px">主演：沙坡村夫</p>
+                    <p style="font-size: 20px">产地：{{ movie.area }}</p>
+                    <p style="font-size: 20px">标签：{{ movie.movie_tag.name }}</p>
+                    <p style="font-size: 20px">星级：
+                        {% for _ in range(movie.starlevel) %}
+                            <i class="glyphicon glyphicon-star"></i>
+                        {% endfor %}
+                        {% for _ in range(5-movie.starlevel) %}
+                            <i class="glyphicon glyphicon-star-empty"></i>
+                        {% endfor %}
+                    </p>
+                    <p style="font-size: 20px">上映时间：{{ movie.addtime }}</p>
+                    <p style="font-size: 20px" class="btn btn-success" id="btn-favor">
+                        点我收藏吧
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" id="movie_container" style="height:360px;"></div>
+    </div>
+    <!--电影播放和详情区域-->
+
+    <!--电影推荐区域-->
+    <div class="col-md-12" style="height: 150px;margin-top: 20px">
+        <h4>相关推荐
+            <a style="font-size: 17px" href="#tab_area" data-toggle="tab"
+               aria-expanded="true">{{ movie.area }}</a>
+            <a style="font-size: 17px" href="#tab_tag" data-toggle="tab"
+               aria-expanded="true">{{ movie.movie_tag.name }}</a>
+        </h4>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_area">
+                {% for recmm in recmm_area_movies %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.movie_play',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane" id="tab_tag">
+                {% for recmm in recmm_tag_movies %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.movie_play',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--电影推荐区域-->
+
+    <!--电影评论区域-->
+    <div class="col-md-12" style="margin-top: 5px">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="glyphicon glyphicon-comment"></i>&nbsp;电影评论
+                </h3>
+            </div>
+            {% if "user_name" not in session %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">×</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <strong>请先<a href="{{ url_for("home.user_login") }}"
+                                 target="_blank" class="text-info">登录</a>，才可参与评论！
+                    </strong>
+                </div>
+            {% else %}
+                <div>
+                    <textarea id="comment_content" style="width: 100%" rows="3"></textarea>
+                    <button class="btn-success" id="btn-comment">提交评论</button>
+                </div>
+            {% endif %}
+            <!--下面是评论列表-->
+            <ol class="breadcrumb" style="margin-top:3px;">
+                <li>全部评论({{ movie.commtnum }})</li>
+            </ol>
+            <ul id="cmmtList" class="commentList">
+                <li style="display: none;"></li>
+                {% for cmmt in movie_comments %}
+                    <li class="item cl">
+                        <a href="{{ url_for("home.user_index",id=cmmt.user.id) }}">
+                            <i class="avatar size-L radius">
+                                <img src="{{ cmmt.userface_url }}"
+                                     class="img-circle" style="border:1px solid #abcdef;
+                                         width: 50px;height: 50px;">
+                            </i>
+                        </a>
+                        <div class="comment-main">
+                            <header class="comment-header">
+                                <div class="comment-meta">
+                                    <a class="comment-author">{{ cmmt.user.name }}</a>
+                                    评论于
+                                    <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">
+                                        {{ cmmt.addtime }}
+                                    </time>
+                                </div>
+                            </header>
+                            <div class="comment-body">
+                                {{ cmmt.comment | safe }}
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <!--电影评论区域-->
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $("#nav-9").addClass('active')
+        })
+    </script>
+    <!--播放器相关-->
+    <script>window.pluginPath = "../../../static/jwplayer-7.12.5/"</script>
+    <script src="{{ url_for('static',filename='jwplayer-7.12.5/jwplayer.js') }}"></script>
+    <script>jwplayer.key = "4sNBpozdkb2Gv+IYeWyd+CID9tW2NXdJE5GeSg==";</script>
+    <script type="text/javascript">
+        var playerInstance = jwplayer("movie_container");
+        playerInstance.setup(
+            {
+                "playlist": [
+                    {
+                        "file": "{{ movie.video_url }}",
+                        "image": "{{ movie.cover_url }}",
+                        "title": "{{ movie.title }}"
+                    }
+                ],
+                // Set the available playback rates of your choice
+                playbackRateControls: [0.75, 1, 1.25, 1.5, 1.75, 2],
+                "width": "66%",
+                "height": "360",
+                "mute": false,
+                "autostart": false,
+                "repeat": false,
+                "skin": {
+                    "name": "five"
+                },
+                "primary": "html5",
+                "flashplayer": "{{ url_for('static',filename='jwplayer-7.12.5/jwplayer.flash.swf') }}",
+                "preload": "none",
+                "playlist.position": "left"
+            });
+    </script>
+    {#    <!--播放器相关-->#}
+
+    {#    负责电影收藏#}
+    <script>
+        $(document).ready(
+            function () {
+                //发送请求确认当前用户对当前电影的收藏状态
+                var uid = {{ session.get('user_id', -1) }};
+                var mid = {{ movie.id }};
+                var act = 'check';//检查收藏状态
+                if (uid == -1) {
+                    $("#btn-favor").text('登陆后可以收藏')
+                } else {
+                    act = 'check';//检查收藏状态
+                    $.ajax({
+                        url: '{{ url_for('home.movie_favor') }}',
+                        type: 'GET',
+                        data: 'mid=' + mid + '&uid=' + uid + '&act=' + act,
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.isfavor == 1)
+                                $('#btn-favor').text('取消收藏');
+                            if (res.isfavor == 0)
+                                $('#btn-favor').text('点我收藏吧');
+                        }
+                    })
+                }
+                //收藏按钮的响应事件
+                $("#btn-favor").click(function () {
+                    if (uid == -1)
+                        alert('请登录再收藏！');
+                    else {
+                        //发送请求给当前用户对当前电影的添加收藏
+                        if ($('#btn-favor').text() == '点我收藏吧')
+                            act = 'add';
+                        //发送请求给当前用户对当前电影的取消收藏
+                        if ($('#btn-favor').text() == '取消收藏')
+                            act = 'del';
+                        if (act == 'add' || act == 'del') {
+                            $.ajax({
+                                url: '{{ url_for('home.movie_favor') }}',
+                                type: 'GET',
+                                data: 'mid=' + mid + '&uid=' + uid + '&act=' + act,
+                                dataType: 'json',
+                                success: function (res) {
+                                    if (res.isfavor == 1)
+                                        $('#btn-favor').text('取消收藏');
+                                    if (res.isfavor == 0)
+                                        $('#btn-favor').text('点我收藏吧');
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        )
+    </script>
+    {#    负责电影收藏#}
+
+    {#    负责电影评论#}
+    <script src='{{ url_for('static',filename='tinymce/tinymce.min.js') }}'></script>
+    <script>
+        tinymce.init({
+            selector: '#comment_content',
+            height: 120,
+            plugins: 'advlist lists',
+            toolbar: ['undo redo | styleselect | bold italic | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist | outdent indent | ' +
+            'fontselect fontsizeselect'],
+            menubar: false,
+            statusbar: false,
+            themes: "modern",
+            skin: "lightgray",
+            language: 'zh_CN'
+        });
+        $(document).ready(function () {
+            $("#btn-comment").click(function () {
+                var uid = '{{ session.get('user_id') }}';
+                var mid = '{{ movie.id }}';
+                var content = tinymce.activeEditor.getContent();
+                if (content == '') {
+                    alert("请输入评论内容！")
+                } else {
+                    $.ajax(
+                        {
+                            url: '{{ url_for("home.movie_comment") }}',
+                            type: 'GET',
+                            data: 'mid=' + mid + '&uid=' + uid + '&content=' + content,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.ok == 1) {
+                                    {# window.location = "{{ url_for('home.movie_play',id=movie.id) }}"#}
+                                    $("#cmmtList li").eq(0).before(res.cmmLi);
+                                }
+                                if (res.ok == 0)
+                                    alert("评论添加失败！");
+                            }
+                        }
+                    );
+                }
+            });
+        })
+    </script>
+    {#    负责电影评论#}
+{% endblock %}

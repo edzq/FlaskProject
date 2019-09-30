@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlaskUploads</title>
+</head>
+<body>
+<h1>Flask-Uploads扩展插件上传文件</h1>
+<hr style="border: dashed;"/>
+<form role="form" method="post" enctype="multipart/form-data">
+    <label> 相册名称：
+        <input type="text" name="image_folder">
+    </label>
+    <label> 选择图像：
+        <input type="file" name="image_file">
+    </label>
+    <input type="submit" value="提交表单">
+</form>
+{% if file_url %}
+    <img src="{{ file_url }}" width="350px">
+{% endif %}
+{% for msg in get_flashed_messages(category_filter=['err']) %}
+    <h4 style="color: firebrick">{{ msg }}</h4>
+{% endfor %}
+{% for msg in get_flashed_messages(category_filter=['ok']) %}
+    <h4 style="color: greenyellow">{{ msg }}</h4>
+{% endfor %}
+</body>
+</html>

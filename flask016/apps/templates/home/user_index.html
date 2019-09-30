@@ -1,0 +1,261 @@
+{% extends "home/layout.html" %}
+
+{% block css_style %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='font-awesome/css/font-awesome.min.css') }}">
+{% endblock %}
+
+{% block content %}
+
+    <!--左侧个人信息栏目-->
+    <div class="col-md-3">
+        <div class="panel panel-primary text-center">
+            <div class="panel-heading ">
+            </div>
+            <div class="panel-body">
+                <img src="{{ user.face_url }}" class="img-circle"
+                     width="230px" height="150px">
+                <h3>{{ user.name }}</h3>
+                <hr style="margin-top: 3px;margin-bottom: 1px"/>
+                <p style="font-size: 17px">粉丝数量：{{ user.fanscount }}</p>
+                <hr style="margin-top: 1px;margin-bottom: 1px"/>
+                <p style="font-size: 17px">偶像数量：{{ user.ouxiangcount }}</p>
+                <hr style="margin-top: 1px;margin-bottom: 1px"/>
+                <p style="font-size: 17px">好友数量：{{ user.friendcount }}</p>
+            </div>
+            <div class="panel-footer">
+                <button id="btn-follow" class="btn btn-success" style="width: 45%">关注我吧</button>
+                <button id="btn-friend" class="btn btn-success" style="width: 45%">加为好友</button>
+            </div>
+        </div>
+        <div class="panel panel-danger">
+            <div class="panel-heading ">
+                关于我
+            </div>
+            <div class="panel-body">
+                <strong><i class="fa fa-info-circle"></i>个人简介</strong>
+                <p style="font-size: 15px">{{ user.jianjie }}</p>
+                <hr/>
+                <strong><i class="fa fa-book"></i>教育背景</strong>
+                <p style="font-size: 15px">博士学位，电子与信息工程学院，
+                    自动专业，西安交通大学
+                </p>
+                <hr/>
+                <strong><i class="fa fa-map-marker"></i>联系方式</strong>
+                <p style="font-size: 15px">
+                    西安交通大学电子与信息工程学院人工智能与机器人研究所，
+                    邮箱：{{ user.email }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!---右侧个人作品栏目-->
+    <div class="col-md-9">
+        <ul class="nav nav-tabs" style="font-size: 18px">
+            <li class="active">
+                <a href="#albums" data-toggle="tab" aria-expanded="true">
+                    <i class="fa fa-photo"></i>发布的相册 </a>
+            </li>
+            <li class=""><a href="#articles" data-toggle="tab" aria-expanded="true">
+                <i class="fa fa-paper-plane"></i>发表的文章 </a>
+            </li>
+            <li class=""><a href="#flowers" data-toggle="tab" aria-expanded="true">
+                <i class="fa fa-apple"></i>与粉丝的互动</a>
+            </li>
+            <li class=""><a href="#users" data-toggle="tab" aria-expanded="true">
+                <i class="fa fa-users"></i>相似用户推荐</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="albums">
+                <div class="text-center" style="margin-top: 10px">
+                    {% for item in user_albums %}
+                        <div class="col-md-4">
+                            <div class="media-card">
+                                <div class="panel panel-body" style="display: block;padding: 3px;">
+                                    <div class="card-title">
+                                    <span style="font-size: 15px;font-weight: bold;color: #0c0c0c">
+                                        {{ item.title }}
+                                    </span>
+                                        <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                                        {{ item.user.name }}
+                                    </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-image">
+                                            <a href="{{ url_for("home.album_browse",id=item.id) }}">
+                                                <img src="{{ item.cover_url }}"
+                                                     width="250px" height="150px">
+                                            </a>
+                                        </div>
+                                        <div class="card-status" style="color: #2c4762">
+                                            <span>浏览量({{ item.clicknum }})</span>
+                                            <span>收藏量({{ item.favornum }})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane" id="articles">
+                <div class="list-group" style="margin-top: 10px">
+                    {% for artitem in user_articles %}
+                        <div class="list-group-item clearfix">
+                            <div class="col-xs-2" style="padding-left: 2px;padding-right: 3px">
+                                <a href="{{ url_for("home.article_read",id=artitem.id) }}">
+                                    <img src="{{ artitem.cover_url }}" width="100px" height="60px">
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="{{ url_for("home.article_read",id=artitem.id) }}">
+                                <span style="font-size: 15px;font-weight: bold;color: #0c0c0c">
+                                {{ artitem.title }}</span>
+                                </a><br>
+                                <span>阅读量：{{ artitem.clicknum }} </span>
+                                <i class="glyphicon glyphicon-apple"></i>
+                                <span>收藏量：{{ artitem.favornum }}</span>
+                            </div>
+                            <div class="col-xs-6">
+                                <p>{{ artitem.abstract }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane" id="flowers">
+                与粉丝的互动
+            </div>
+            <div class="tab-pane" id="users">
+                <div class="col-md-12 text-center" style="margin-top: 12px">
+                    {% for recmm in recmm_users %}
+                        <div class="col-md-3">
+                            <a href="{{ url_for("home.user_index",id=recmm.id) }}">
+                                <img src="{{ recmm.face_url }}" class="img-circle"
+                                     width="100%" height="150px">
+                            </a>
+                            <br>
+                            <p style="font-size: 17px">{{ recmm.name }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-2").addClass('active');
+                //发送请求确认当前登录用户对形象首页的用户的关注状态和好友状态
+                var uid = '{{ session.get('user_id','0') }}';//当前登陆的用户id
+                var oid = '{{ user.id }}';//当前形象首页属于哪个用户
+                var act = 'check';
+                if (uid == '0') {
+                    $("#btn-follow").text('登陆后可关注');
+                    $("#btn-friend").text('登陆后加好友');
+                }
+                else if (uid == oid) {
+                    $("#btn-follow").hide();
+                    $("#btn-friend").hide();
+                }
+                else {
+                    act = 'check';
+                    //检查关注状态
+                    $.ajax({
+                        url: '{{ url_for('home.user_follow') }}',
+                        type: 'GET',
+                        data: 'oid=' + oid + '&uid=' + uid + '&act=' + act,
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.isfollow == 1)
+                                $("#btn-follow").text('取消关注');
+                            if (res.isfollow == 0)
+                                $("#btn-follow").text('关注我吧');
+                        }
+                    });
+                    //检查好友状态
+                    $.ajax({
+                        url: '{{ url_for('home.user_friend') }}',
+                        type: 'GET',
+                        data: 'oid=' + oid + '&uid=' + uid + '&act=' + act,
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.isfriend == 1)
+                                $("#btn-friend").text('取消好友');
+                            if (res.isfriend == 0)
+                                $("#btn-friend").text('加为好友');
+                            if (res.isfriend == 2)
+                                $("#btn-friend").text('等待确认');
+                        }
+                    });
+                }
+
+                $("#btn-follow").click(function () {
+                    if (uid == '0') {
+                        alert("请登陆后再关注！");
+                        return
+                    }
+                    if (uid == oid) {
+                        alert("不能关注你自己！");
+                        return;
+                    }
+                    //根据按钮的文本内容发送添加关注的请求
+                    if ($('#btn-follow').text() == '关注我吧')
+                        act = 'add';
+                    //根据按钮的文本内容发送取消关注的请求
+                    if ($('#btn-follow').text() == '取消关注')
+                        act = 'del';
+                    if (act == 'add' || act == 'del') {
+                        $.ajax({
+                            url: '{{ url_for('home.user_follow') }}',
+                            type: 'GET',
+                            data: 'oid=' + oid + '&uid=' + uid + '&act=' + act,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.isfollow == 1)
+                                    $('#btn-follow').text('取消关注');
+                                if (res.isfollow == 0)
+                                    $('#btn-follow').text('关注我吧');
+                            }
+                        });
+                    }
+                });
+
+                $("#btn-friend").click(function () {
+                    //根据按钮的文本内容发送添加好友的请求
+                    if ($('#btn-friend').text() == '等待确认') {
+                        alert('正在等待对方确认');
+                        return
+                    }
+                    if ($('#btn-friend').text() == '加为好友')
+                        act = 'add';
+                    //根据按钮的文本内容发送取消好友的请求
+                    if ($('#btn-friend').text() == '取消好友')
+                        act = 'del';
+                    if (act == 'add' || act == 'del') {
+                        $.ajax({
+                            url: '{{ url_for('home.user_friend') }}',
+                            type: 'GET',
+                            data: 'oid=' + oid + '&uid=' + uid + '&act=' + act,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.isfriend == 1)
+                                    $('#btn-friend').text('取消好友');
+                                if (res.isfriend == 0)
+                                    $('#btn-friend').text('加为好友');
+                                if (res.isfriend == 2) {
+                                    $('#btn-friend').text('等待确认');
+                                }
+                            }
+                        });
+                    }
+                })
+            }
+        );
+    </script>
+{% endblock %}

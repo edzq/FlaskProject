@@ -1,0 +1,91 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FLASK Website</title>
+    <!-- Bootstrap -->
+    <link href="{{ url_for("static",filename="bootstrap/bootstrap.min.css") }}" rel="stylesheet">
+    <link href="{{ url_for("static",filename="bootstrap/bootstrap-theme.min.css") }}" rel="stylesheet">
+    {% block css_style %}
+    {% endblock %}
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default" style="margin-top: 10px">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for("index") }}">Flask Study</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li id="nav-1">
+                        <a href="{{ url_for("index") }}">
+                            <i class="glyphicon glyphicon-home"></i>
+                            首页
+                        </a>
+                    </li>
+                    <li id="nav-6">
+                        <a href="{{ url_for("album_index") }}">
+                            <i class="glyphicon glyphicon-picture"></i>相册
+                        </a>
+                    </li>
+                    <li id="nav-7">
+                        <a href="{{ url_for("article_index") }}">
+                            <i class="glyphicon glyphicon-book"></i>文章
+                        </a>
+                    </li>
+                    <li id="nav-8">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-music"></i>音乐
+                        </a>
+                    </li>
+                    <li id="nav-9">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-film"></i>电影
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if "user_name" in session %}
+                        <li id="nav-2"><a href="{{ url_for("user_center") }}">
+                            <i class="glyphicon glyphicon-user"></i>个人中心</a></li>
+                        <li id="nav-3"><a href="{{ url_for("logout") }}">
+                            <i class="glyphicon glyphicon-log-out"></i>退出</a></li>
+                    {% else %}
+                        <li id="nav-4"><a href="{{ url_for("user_login") }}">
+                            <i class="glyphicon glyphicon-log-in"></i>登录</a></li>
+                        <li id="nav-5"><a href="{{ url_for("user_regist") }}">
+                            <i class="glyphicon glyphicon-info-sign"></i>注册</a></li>
+                    {% endif %}
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="{{ url_for("static",filename="jquery/jquery.min.js") }}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="{{ url_for("static",filename="bootstrap/bootstrap.min.js") }}"></script>
+
+{% block js_code %}
+
+{% endblock %}
+
+</body>
+</html>

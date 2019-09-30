@@ -1,0 +1,183 @@
+{% extends "home/layout.html" %}
+
+{% block content %}
+
+    <div class="col-md-12 text-center">
+        <h1>最佳创作者</h1>
+        {% for creator in bestCreators %}
+            <div class="col-md-3">
+                <div>
+                    <a href="{{ url_for("home.user_index",id=creator.id) }}">
+                        <img src="{{ creator.face_url }}" class="img-circle"
+                             width="100%" height="150px">
+                    </a><br>
+                    <span style="font-size: 16px;font-weight: 600">用户名:{{ creator.name }}</span>
+                    <i class="glyphicon glyphicon-scale"></i>
+                    <span style="font-size: 16px;font-weight: 600">得分:{{ creator.creator_score }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>相册推荐</h1>
+        {% for item in recmm_albums %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("home.album_browse",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span> 图片量({{ item.photonum }})</span>
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>文章推荐</h1>
+        {% for item in recmm_articles %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("home.article_read",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>音乐推荐</h1>
+        {% for ritem in recmd_musics %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ ritem.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">&gt;
+                            {{ ritem.singer }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for('home.music_listen',id=ritem.id) }}">
+                                    <img src="{{ ritem.cover_url }}"
+                                         width="250px" height="180px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>播放量({{ ritem.clicknum }}) </span>
+                                <span> 收藏量({{ ritem.favornum }})</span>
+                                <span> 评论量({{ ritem.commtnum }})</span>
+                            </div>
+                            <div>
+                                <audio src="{{ ritem.audio_url }}"
+                                       controls="controls" preload="none" style="width: 250px"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>电影推荐</h1>
+        {% for ritem in recmd_movies %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                            <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                                {{ ritem.title }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for('home.movie_play',id=ritem.id) }}">
+                                    <img src="{{ ritem.cover_url }}"
+                                         width="250px" height="180px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>播放量({{ ritem.clicknum }}) </span>
+                                <span> 收藏量({{ ritem.favornum }})</span>
+                                <span> 评论量({{ ritem.commtnum }})</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>最佳评论员</h1>
+        {% for commentor in bestCommentors %}
+            <div class="col-md-3">
+                <div>
+                    <a href="{{ url_for("home.user_index",id=commentor.id) }}">
+                        <img src="{{ commentor.face_url }}" class="img-circle"
+                             width="100%" height="150px">
+                    </a><br>
+                    <span style="font-size: 16px;font-weight: 600">用户名:{{ commentor.name }}</span>
+                    <i class="glyphicon glyphicon-scale"></i>
+                    <span style="font-size: 16px;font-weight: 600">得分:{{ commentor.comments_score }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-1").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}
+

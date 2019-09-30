@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% import 'macro_paginate.html' as paginator %}
+{% block css_style %}
+    <link href="{{ url_for("static", filename="custom/custom.css") }}"
+          rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                {% include "article_tags.html" %}
+            </div>
+            <div class="col-md-7">
+                <div class="news-list">
+                    {% for article in articles.items %}
+                        <div class="news-list-item clearfix">
+                            <div class="col-xs-4">
+                                <a href="{{ url_for('article_read',id=article.id) }}">
+                                    <img src="{{ article.coverimgurl }}">
+                                </a>
+                            </div>
+                            <div class="col-xs-8">
+                                <a class="title" style="font-size: larger"
+                                   href="{{ url_for('article_read',id=article.id) }}">
+                                    {{ article.title }}
+                                </a>
+                                <div class="info">
+                            <span><span class="avatar">
+                                <img src="{{ article.userface_url }}">
+                            </span>{{ article.user.name }}</span> ⋅
+                                    <span>阅读量({{ article.clicknum }})</span> ⋅
+                                    <span>收藏量({{ article.favornum }})</span> ⋅
+                                    <span>发布时间({{ article.addtime }})</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {{ paginator.paginate(articles,'article_list') }}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="side-bar-card">
+                    <div class="card-title">相关推荐</div>
+                    <div class="card-body">
+                        <div class="list">
+                            {% for foo in range(1,4) %}
+                                <div class="item clearfix">
+                                    <div class="col-xs-5  no-padding-h">
+                                        <a href="">
+                                            <img src="{{ url_for('static',
+                        filename='uploads/flask001/17_3f04a6.jpg') }}">
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <a href="">
+                                            <div class="title">
+                                                举杯邀明月，对影成三人
+                                            </div>
+                                            <div class="desc">
+                                                10k 浏览⋅ 1k 收藏
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="side-bar-card">
+                    <div class="card-title">我的收藏</div>
+                    <div class="card-body">
+                        <div class="list">
+                            {% for foo in range(1,4) %}
+                                <div class="item clearfix">
+                                    <div class="col-xs-5  no-padding-h">
+                                        <a href="">
+                                            <img src="{{ url_for('static',
+                        filename='uploads/flask001/17_3f04a6.jpg') }}">
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <a href="">
+                                            <div class="title">
+                                                举杯邀明月，对影成三人
+                                            </div>
+                                            <div class="desc">
+                                                10k 浏览⋅ 1k 收藏
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-7").addClass('active');
+                var tagid = {{ request.args.get('tid',0) }};
+                $("#item-" + tagid).addClass('active')
+            }
+        );
+    </script>
+{% endblock %}
+

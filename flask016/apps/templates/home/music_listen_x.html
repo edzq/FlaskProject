@@ -1,0 +1,582 @@
+{% extends "home/layout.html" %}
+
+{% block css_style %}
+    <link href="{{ url_for("static", filename="custom/custom.css") }}"
+          rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-12">
+        <div id="player_canvas" class="col-md-7" style="height:380px">
+            {#            <canvas width="58.3%" height="380px"></canvas>#}
+        </div>
+        <div class="col-md-5" style="height: 380px">
+            <ul class="nav nav-tabs" style="font-size: large">
+                <li class="active" id="li-1" style="display: inline-block">
+                    <a href="#tab-1" data-toggle="tab" aria-expanded="true">音乐详情</a></li>
+                <li class="" id="li-2" style="display: inline-block">
+                    <a href="#tab-2" data-toggle="tab" aria-expanded="true">播放控制</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-1">
+                    <div class="col-md-6">
+                        <p style="font-size: large">标题：{{ music.title }}</p>
+                        <p style="font-size: large">歌手：{{ music.singer }}</p>
+                        <p style="font-size: large">语种：{{ music.music_lang_tag.name }}</p>
+                        <p style="font-size: large">流派：{{ music.music_style_tag.name }}</p>
+                        <p style="font-size: large">主题：{{ music.music_theme_tag.name }}</p>
+                        <p style="font-size: large">心情：{{ music.music_emotion_tag.name }}</p>
+                        <p style="font-size: large">场景：{{ music.music_scene_tag.name }}</p>
+                        <p style="font-size: large" class="btn btn-success" id="btn-favor">
+                            点我收藏吧</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <img src="{{ music.cover_url }}" class="img-circle img-responsive"
+                             style="margin-top: 10px;margin-bottom: 5px" id="music-cover">
+                        <p id="show-lrc" style="font-size: large">****显示歌词****</p>
+                        <p id="show-lrc2" style="font-size: large"></p>
+                        <p id="show-lrc3" style="font-size: large"></p>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab-2">
+                    <div style="font-size: large;margin-bottom: 5px" class="text-left">
+                        <button id="loadmusic">加载</button>
+                        <button id="playmusic">播放</button>
+                        <button id="stopmusic">停止</button>
+                        <button id="pausemusic">暂停</button>
+                        <button id="continuemusic">继续</button>
+                    </div>
+                    <div style="font-size: 15px;margin-bottom: 5px" class="text-left">
+                        <label for="volumn-tune">音量调节</label>
+                        <input type="range" min="0" max="100" id="volumntune">
+                        <label for="volumn-tune">进度调节</label>
+                        <input type="range" min="0" max="100" id="progresstune">
+                    </div>
+                    <div style="font-size: 15px;margin-bottom: 5px" class="text-left">
+                        <label for="visual_domain">可视化域</label>
+                        <select id="visual_domain">
+                            <option value="time">时域可视化</option>
+                            <option value="frequency">频域可视化</option>
+                        </select><br>
+                        <label>点状图</label>
+                        <input type="radio" id="drawType" name="drawType" value="dots">
+                        <label>柱状图</label>
+                        <input type="radio" id="drawType" name="drawType" value="bars">
+                        <label>波形图</label>
+                        <input type="radio" id="drawType" name="drawType" value="waves" checked="checked">
+                        <label>戴帽柱状图</label>
+                        <input type="radio" id="drawType" name="drawType" value="hat_bars">
+                        <label>移动点状图</label>
+                        <input type="radio" id="drawType" name="drawType" value="move_dots">
+                        <label for="volumn-tune">点状图透明度调节</label>
+                        <input type="range" min="0" max="100" id="alpha-tune">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" col-md-12 " style="height: 150px">
+        <h4>相关推荐
+            <a style="font-size: 17px" href="#tab_lang" data-toggle="tab"
+               aria-expanded="true">{{ music.music_lang_tag.name }}</a>
+            <a style="font-size: 17px" href="#tab_style" data-toggle="tab"
+               aria-expanded="true">{{ music.music_style_tag.name }}</a>
+            <a style="font-size: 17px" href="#tab_theme" data-toggle="tab"
+               aria-expanded="true">{{ music.music_theme_tag.name }}</a>
+            <a style="font-size: 17px" href="#tab_emotion" data-toggle="tab"
+               aria-expanded="true">{{ music.music_emotion_tag.name }}</a>
+            <a style="font-size: 17px" href="#tab_scene" data-toggle="tab"
+               aria-expanded="true">{{ music.music_scene_tag.name }}</a>
+            <a style="font-size: 17px" href="#tab_singer" data-toggle="tab"
+               aria-expanded="true">{{ music.singer }}</a>
+        </h4>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_lang">
+                {% for recmm in recmm_lang_musics %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.music_listen',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.singer }}之{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane" id="tab_style">
+                {% for recmm in recmm_style_musics %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.music_listen',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.singer }}之{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane" id="tab_theme">
+                {% for recmm in recmm_theme_musics %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.music_listen',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.singer }}之{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane" id="tab_emotion">
+                {% for recmm in recmm_emotion_musics %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.music_listen',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.singer }}之{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane" id="tab_scene">
+                {% for recmm in recmm_scene_musics %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.music_listen',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.singer }}之{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane" id="tab_singer">
+                {% for recmm in recmm_singer_musics %}
+                    <div class="col-md-2">
+                        <a href="{{ url_for('home.music_listen',id=recmm.id) }}">
+                            <img src="{{ recmm.cover_url }}" height="96px" width="150px"
+                                 title="{{ recmm.singer }}之{{ recmm.title }}" alt="{{ recmm.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!--音乐评论区-->
+    <div class="col-md-12" style="margin-top:1px;">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span class="glyphicon glyphicon-comment">
+                    </span>&nbsp;音乐评论</h3>
+            </div>
+            <div class="panel-body">
+                {% if "user_name" not in session %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>请先<a href="{{ url_for("home.user_login") }}"
+                                     target="_blank" class="text-info">登录</a>，才可参与评论！</strong>
+                    </div>
+                {% else %}
+                    <form role="form" style="margin-bottom:6px;">
+                        <div class="form-group">
+                            <div>
+                                <label for="input_content">内容</label>
+                                <textarea id="input_content"></textarea>
+                            </div>
+                            <div class="col-xs-12" id="error_content"></div>
+                        </div>
+                        <a class="btn btn-success" id="btn-comment">
+                        <span class="glyphicon glyphicon-edit">
+                        </span>&nbsp;提交评论</a>
+                    </form>
+                {% endif %}
+                <ol class="breadcrumb" style="margin-top:6px;">
+                    <li>全部评论({{ comments_count }})</li>
+                </ol>
+                <ul id="cmmtList" class="commentList">
+                    {% for item in range(1,4) %}
+                        <li class="item cl">
+                            <a>
+                                <i class="avatar size-L radius">
+                                    <img src="{{ music.cover_url }}"
+                                         class="img-circle" style="border:1px solid #abcdef;
+                                         width: 50px;height: 50px;">
+                                </i>
+                            </a>
+                            <div class="comment-main">
+                                <header class="comment-header">
+                                    <div class="comment-meta">
+                                        <a class="comment-author">{{ music.title }}</a>
+                                        评论于
+                                        <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">
+                                            2016-12-07 09:12:51
+                                        </time>
+                                    </div>
+                                </header>
+                                <div class="comment-body">
+                                    <p>邓丽君是最伟大的歌唱家！！！！</p>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="col-md-12 text-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li>
+                                <a href="#" aria-label="First">
+                                    <span aria-hidden="true">首页</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">上一页</span>
+                                </a>
+                            </li>
+                            <li><a href="#">1&nbsp;/&nbsp;10</a></li>
+                            <li>
+                                <a href="#" aria-label="Next">
+                                    <span aria-hidden="true">下一页</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" aria-label="Last">
+                                    <span aria-hidden="true">尾页</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--音乐评论区-->
+{% endblock %}
+
+{% block js_code %}
+    {#    负责音乐可视化#}
+    <script src="{{ url_for('static',filename='webaudio/MusicVisualizer.js') }}"></script>
+    <script>
+        var visualDomian = 'time';
+        var size = 1024;
+        var mv = new MusicVisualizer({
+            visual_domain: visualDomian,
+            size: size,
+            drawMusicOnCanvas: DrawMusicOnCanvas
+        });
+
+        //获取canvas的相关DOM元素，对其进行初始设置
+        var playerCanvas = $("#player_canvas")[0];
+        var cvsXpos, cvsYpos, cvsHeight, cvsWidth;
+        var canvas = document.createElement("canvas");
+        playerCanvas.appendChild(canvas);
+        var ctx = canvas.getContext("2d");//绘图上下文句柄，操作各种绘图工具绘图的句柄
+        //在canvas画布区域内产生颜色和位置都随机分布的圆点
+        var DotAlpha = 0.5;
+        //定义一个调节随机颜色字符串的透明度的函数
+        function adjustAlpha(rgba_str, alpha) {
+            alpha_idx = rgba_str.lastIndexOf(",");
+            rgba_str = rgba_str.substring(0, alpha_idx) + "," + String(alpha) + ")";
+            return rgba_str;
+        }
+        function random(minVal, maxVal) {
+            return Math.round(Math.random() * (maxVal - minVal) + minVal)
+        }
+        var Dots = [];
+        function getDots() {
+            Dots = [];
+            for (var i = 0; i < size; i++) {
+                var x = random(0, cvsWidth);
+                var y = random(0, cvsHeight);
+                var color = "rgba(" + random(0, 255) + "," + random(0, 255) + "," +
+                    random(0, 255) + "," + String(DotAlpha) + ")";
+                Dots.push({x: x, y: y, dx: random(0.5, 1.3), color: color, hat: 2});
+            }
+        }
+
+        //当页面被缩放后，获取Canvas窗口的实际大小
+        function resizeCanvas() {
+            cvsXpos = playerCanvas.clientX;
+            cvsYpos = playerCanvas.clientY;
+            cvsHeight = playerCanvas.clientHeight;
+            cvsWidth = playerCanvas.clientWidth;
+            canvas.width = cvsWidth;
+            canvas.height = cvsHeight;
+            //绘图区域发生变化后自动重新生成新的随机小圆点
+            getDots();
+        }
+        resizeCanvas();
+        window.onresize = resizeCanvas();
+
+        var lrcIdx = 0;
+
+        //把接收到的每一帧的数据绘制在Canvas上，根据不同的风格选择不同的绘制方案
+        function DrawMusicOnCanvas(arr) {
+            var drawType = $('input:radio[name=drawType]:checked').val();
+            //绘制波形图
+            if (drawType == "waves") {
+                ctx.clearRect(0, 0, cvsWidth, cvsHeight);//清除上一帧的图像，不然会叠加
+                //设置线性填充风格
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgb(0,0,0)";//generateRandomColor()
+                ctx.beginPath();
+                var sliceWidth = cvsWidth * 1.0 / (2 * size);
+                var x = 0;
+                for (var i = 0; i < (2 * size); i++) {
+
+                    var v = arr[i] / 128;
+                    var y = cvsHeight - v * cvsHeight / 2;
+
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+
+                    x += sliceWidth;
+                }
+
+                ctx.lineTo(cvsWidth, cvsHeight / 2);
+                ctx.stroke();
+            }
+            //绘制柱状分布直方图
+            if (drawType == "bars") {
+                ctx.clearRect(0, 0, cvsWidth, cvsHeight);//清除上一帧的图像，不然会叠加
+                //设置线性填充风格
+                var line = ctx.createLinearGradient(0, 0, 0, cvsHeight);
+                line.addColorStop(0, "red");
+                line.addColorStop(0.5, "yellow");
+                line.addColorStop(1, "green");
+                ctx.fillStyle = line;
+                //开始绘制频率分布的柱状图
+                var binWidth = cvsWidth / size;
+                for (var i = 0; i < size; i++) {
+                    var h = arr[i] / 256 * cvsHeight;
+                    ctx.fillRect(i * binWidth, cvsHeight - h, binWidth * 0.6, h)
+                }
+            }
+            //绘制戴帽柱状频率分布直方图
+            if (drawType == "hat_bars") {
+                ctx.clearRect(0, 0, cvsWidth, cvsHeight);//清除上一帧的图像，不然会叠加
+                //设置线性填充风格
+                var line = ctx.createLinearGradient(0, 0, 0, cvsHeight);
+                line.addColorStop(0, "red");
+                line.addColorStop(0.5, "yellow");
+                line.addColorStop(1, "green");
+                ctx.fillStyle = line;
+                //开始绘制频率分布的柱状图
+                var binWidth = cvsWidth / size;//柱子加柱子间隔的宽度
+                var zhuWidth = binWidth * 0.6;//柱子的宽度
+                var hatHeight = zhuWidth;   //小帽的高度
+                for (var i = 0; i < size; i++) {
+                    var zhuHeight = arr[i] / 256 * cvsHeight;//柱子的高度
+                    ctx.fillRect(i * binWidth, cvsHeight - zhuHeight, zhuWidth, zhuHeight);
+                    //绘制小帽
+                    var dot = Dots[i];
+                    ctx.fillRect(i * binWidth, cvsHeight - (dot.hat + hatHeight), zhuWidth, hatHeight);
+                    dot.hat--;
+                    if (dot.hat < 0) {
+                        dot.hat = 0;
+                    }
+                    if ((dot.hat > 0) && (dot.hat < zhuHeight + 30)) {
+                        dot.hat = (zhuHeight + 30) > cvsHeight ? cvsHeight : (zhuHeight + 30);
+                    }
+                }
+            }
+            //绘制圆点状尺寸随频率变化的分布图
+            if ((drawType == "dots") || (drawType == "move_dots")) {
+                ctx.clearRect(0, 0, cvsWidth, cvsHeight);//清除上一帧的图像，不然会叠加
+                var maxRadius = 50; //圆点点可以达到的最大半径
+                var minRadius = 5; //圆点点可以达到的最小半径
+                //逐个绘制每一个圆点点，每个圆点点对应一个频率分量，半径随着频率的变化而变化
+                for (var i = 0; i < size; i++) {
+                    var dot = Dots[i];
+                    var dotR = minRadius + arr[i] / 256 * maxRadius;
+                    ctx.beginPath();//很重要，表示开启一段新的圆弧
+                    ctx.arc(dot.x, dot.y, dotR, 0, Math.PI * 2, true);
+                    //空心的圆点
+                    //ctx.strokeStyle = "#000";
+                    //ctx.stroke();
+                    //颜色成放射状变化的圆点
+                    var g = ctx.createRadialGradient(dot.x, dot.y, 0, dot.x, dot.y, dotR);
+                    g.addColorStop(0, "#fff");
+                    rgba_str = adjustAlpha(dot.color, DotAlpha);
+                    g.addColorStop(1, rgba_str);
+                    ctx.fillStyle = g;
+                    ctx.fill();
+                    //向右随机移动
+                    if (drawType == "move_dots")
+                        dot.x = dot.x > cvsWidth ? 0 : (dot.x + dot.dx);
+                }
+            }
+        }
+
+        //从python变量里面接受歌词到JS的Array里面
+        function ConvertMusicLrc(lrc_ts, lrc_ct) {
+            {% for item in music.lrc %}
+                lrc_ts[{{ loop.index0 }}] = parseInt('{{ item[0] }}');
+                lrc_ct[{{ loop.index0 }}] = '{{ item[1] }}';
+            {% endfor %}
+        }
+
+        var lrc_ts = new Array();//保存时间戳
+        var lrc_ct = new Array();//保存歌词内容
+        ConvertMusicLrc(lrc_ts, lrc_ct);
+
+        //显示歌词
+        function ShowMusicLrc() {
+            if (mv.audioState != 'playing') {
+                return
+            }
+            //根据当前累计播放时间计算歌词内容的索引位置
+            var offset = mv.currentOffset;
+            for (var ts = 0; ts < lrc_ts.length; ts++) {
+                if (offset > lrc_ts[ts])
+                    continue;
+                else {
+                    lrcIdx = ts;
+                    break;
+                }
+            }
+            //设置歌词内容
+            if (lrcIdx - 1 > 0)
+                $("#show-lrc").text(lrc_ct[lrcIdx - 1]);
+            $("#show-lrc2").text(lrc_ct[lrcIdx]);
+            if (lrcIdx + 1 < lrc_ts.length)
+                $("#show-lrc3").text(lrc_ct[lrcIdx + 1]);
+        }
+
+        //每隔0.1秒更新一下歌词显示
+        setInterval('ShowMusicLrc()', 50);
+
+        var coverRotDgree = 0;
+        //播放歌曲的时候旋转头像
+        function RotateMusicCover() {
+            if (mv.audioState != 'playing')
+                return;
+            //设置封面图片旋转
+            var dgree = coverRotDgree + 50 * Math.PI / 180;
+            $("#music-cover").css("transform", "rotate(" + dgree + "deg)");
+            coverRotDgree += 1;
+        }
+        //每隔50ms更新一下音乐封面的角度
+        setInterval('RotateMusicCover()', 50);
+
+        $(document).ready(
+            function () {
+                $("#nav-8").addClass('active');
+
+                $("#loadmusic").click(function () {
+                    mv.load(audio_url = '{{ music.audio_url }}');
+                });
+
+                $("#playmusic").click(function () {
+                    $("#progresstune").val(10);
+                    mv.play();
+                });
+
+                $("#stopmusic").click(function () {
+                    mv.stop();
+                });
+
+                $("#pausemusic").click(function () {
+                    mv.pause();
+                });
+
+                $("#continuemusic").click(function () {
+                    mv.continue();
+                });
+
+                //调节音量
+                $("#volumntune").change(function () {
+                    mv.changeVolumn(this.value / this.max);
+                });
+
+                //调节播放进度
+                $("#progresstune").change(function () {
+                    mv.changeProgress(this.value / this.max);
+                });
+
+                //根据选项设置可视化域的可视化参数
+                $("#visual_domain").change(function () {
+                    var selecteddomain = $("#visual_domain").val();
+                    selecteddomain == 'time' ? size = 1024 : size = 64;
+                    mv.switchDomain(selecteddomain, size);
+                });
+
+                //用html页面上的透明度滑动调节器来控制圆点的透明度
+                $("#alpha-tune").change(function () {
+                    DotAlpha = this.value / this.max;
+                });
+            }
+        );
+    </script>
+
+    {#    负责音乐收藏#}
+    <script>
+        $(document).ready(
+            function () {
+                //发送请求确认当前用户对当前音乐的收藏状态
+                var uid = {{ session.get('user_id', -1) }};
+                var mid = {{ music.id }};
+                var act = 'check';//检查收藏状态
+                if (uid == -1) {
+                    $("#btn-favor").text('登陆后可以收藏')
+                } else {
+                    $.ajax({
+                        url: '{{ url_for('home.music_favor') }}',
+                        type: 'GET',
+                        data: 'mid=' + mid + '&uid=' + uid + '&act=' + act,
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.isfavor == 1)
+                                $('#btn-favor').text('取消收藏');
+                            if (res.isfavor == 0)
+                                $('#btn-favor').text('点我收藏吧');
+                        }
+                    })
+                }
+                //收藏按钮的响应事件
+                $("#btn-favor").click(function () {
+                    if (uid == -1)
+                        alert('请登录再收藏！');
+                    else {
+                        //发送请求给当前用户对当前音乐的添加收藏
+                        if ($('#btn-favor').text() == '点我收藏吧')
+                            act = 'add';
+                        //发送请求给当前用户对当前音乐的取消收藏
+                        if ($('#btn-favor').text() == '取消收藏')
+                            act = 'del';
+                        if (act == 'add' || act == 'del') {
+                            $.ajax({
+                                url: '{{ url_for('home.music_favor') }}',
+                                type: 'GET',
+                                data: 'mid=' + mid + '&uid=' + uid + '&act=' + act,
+                                dataType: 'json',
+                                success: function (res) {
+                                    if (res.isfavor == 1)
+                                        $('#btn-favor').text('取消收藏');
+                                    if (res.isfavor == 0)
+                                        $('#btn-favor').text('点我收藏吧');
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        )
+    </script>
+
+    <!--富文本评论区域-->
+    <script type="text/javascript" src="{{ url_for("static",filename="ueditor/ueditor.config.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for("static",filename="ueditor/ueditor.all.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for("static",filename="ueditor/lang/zh-cn/zh-cn.js") }}"></script>
+    <script>
+        var ue = UE.getEditor('input_content', {
+            toolbars: [
+                ['fullscreen', 'emotion', 'preview', 'link']
+            ],
+            initialFrameWidth: "100%",
+            initialFrameHeight: "100",
+        });
+    </script>
+    <!--富文本评论区域-->
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "admin/admin_layout.html" %}
+
+{% block content_wrapper %}
+
+    <!-- /.content-wrapper -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1> Flask后台管理系统 </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li class="active">修改密码</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Horizontal Form -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">修改密码之表单</h3>
+                </div>
+                <!-- /.box-header -->
+                {% for msg in get_flashed_messages(category_filter=['error']) %}
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa fa-warning"></i> 失败！</h4>
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+                {% for msg in get_flashed_messages(category_filter=['ok']) %}
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa "></i> 成功！</h4>
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+                <!-- form start -->
+                <form class="form-horizontal" role="form" method="post">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="old_pwd" class="col-sm-2 control-label">旧密码</label>
+                            <div class="col-sm-10">
+                                {{ form.old_pwd }}
+                                {% for error in form.old_pwd.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_pwd" class="col-sm-2 control-label">新密码</label>
+                            <div class="col-sm-10">
+                                {{ form.new_pwd }}
+                                {% for error in form.new_pwd.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> 记住我
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <a href="{{ url_for('admin.index') }}" class="btn btn-default">取消修改</a>
+                        {{ form.csrf_token }}
+                        {{ form.submit }}
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </section>
+        <!-- /.content -->
+    </div>
+
+
+{% endblock %}

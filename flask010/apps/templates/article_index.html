@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 10px 20px">
+        <h2>文章首页</h2>
+        <p>
+            在这里你可以上传，管理，分享自己的文章，也可以浏览，收藏，评论别人的文章！
+        </p>
+        <a href="{{ url_for('article_create') }}" style="display: inline-block" class="btn btn-primary">
+            创建新的文章
+        </a>
+        <a href="{{ url_for('article_write') }}" style="display: inline-block" class="btn btn-primary">
+            更新已有文章
+        </a>
+        <a href="{{ url_for("article_list",page=1) }}" style="display: inline-block"
+           class="btn btn-primary">
+            文章列表
+        </a>
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>文章推荐</h1>
+
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>文章首发</h1>
+
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>最火文章</h1>
+
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-7").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}
+

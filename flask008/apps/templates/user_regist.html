@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    {% for message in get_flashed_messages(category_filter=['err']) %}
+        <h3 style="color: red">{{ message }}</h3>
+    {% endfor %}
+    {% for message in get_flashed_messages(category_filter=['ok']) %}
+        <h3 style="color: green">{{ message }}</h3>
+    {% endfor %}
+    <form role="form" method="post" enctype="multipart/form-data"
+          class="col-md-6 col-md-offset-2">
+        <div class="form-group">
+            {{ form.user_name.label }}
+            {{ form.user_name }}
+            {% for err in form.user_name.errors %}
+                <p style="color: red">{{ err }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.user_pwd.label }}
+            {{ form.user_pwd }}
+            {% for err in form.user_pwd.errors %}
+                <p style="color: red">{{ err }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.user_email.label }}
+            {{ form.user_email }}
+            {% for err in form.user_email.errors %}
+                <p style="color: red">{{ err }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.user_phone.label }}
+            {{ form.user_phone }}
+            {% for err in form.user_phone.errors %}
+                <p style="color: red">{{ err }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.user_jianjie.label }}
+            {{ form.user_jianjie }}
+            {% for err in form.user_jianjie.errors %}
+                <p style="color: red">{{ err }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.user_face.label }}
+            {{ form.user_face }}
+            {% for err in form.user_face.errors %}
+                <p style="color: red">{{ err }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.csrf_token }}
+            {{ form.submit }}
+        </div>
+    </form>
+
+{% endblock %}
+
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-5").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}

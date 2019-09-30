@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 5px 20px">
+        <h2>{{ session.get("user_name") }}的个人中心</h2>
+    </div>
+
+    <div>
+        {% include "user_menu.html" %}
+
+        <div class="col-md-8">
+
+            <div class="row">
+                {% for message in get_flashed_messages(category_filter=['err']) %}
+                    <h4 style="color: red">{{ message }}</h4>
+                {% endfor %}
+                {% for message in get_flashed_messages(category_filter=['ok']) %}
+                    <h4 style="color: green">{{ message }}</h4>
+                {% endfor %}
+
+                <form role="form" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            {{ form.album_upload }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.csrf_token }}
+                            {{ form.submit }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row" style="margin-top: 10px">
+                {% for photo in album.photos %}
+                    <div class="col-md-3">
+                        <div class="media-card">
+                            <div class="panel panel-body" style="display: block;padding: 3px;">
+                                <div class="card-body">
+                                    <div class="card-image">
+                                        <img src="{{ photo.url }}"
+                                             width="200px" height="150px">
+                                    </div>
+                                    <div class="card-status" style="font-weight: 800;color: #2c4762">
+                                        <a href="{{ url_for('user_album_mine_cover',id=photo.id) }}">
+                                            设为封面
+                                        </a>
+                                        <a href="{{ url_for('user_album_mine_photo_del',id=photo.id) }}">
+                                            删除此图
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#item-5").addClass('list-group-item-success')
+            }
+        );
+    </script>
+{% endblock %}

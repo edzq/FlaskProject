@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 10px 20px">
+        <h2>相册首页</h2>
+        <p>
+            在这里你可以上传，管理，分享自己的相册，也可以浏览，收藏别人的相册！
+        </p>
+        <a href="{{ url_for("album_create") }}" style="display: inline-block" class="btn btn-primary">
+            创建新的相册
+        </a>
+        <a href="{{ url_for("album_upload") }}" style="display: inline-block" class="btn btn-primary">
+            更新已有相册
+        </a>
+        <a href="{{ url_for("album_list",page=1) }}" style="display: inline-block" class="btn btn-primary">
+            相册列表
+        </a>
+    </div>
+    {% for message in get_flashed_messages(category_filter=['err']) %}
+        <h4 style="color: red">{{ message }}</h4>
+    {% endfor %}
+    {% for message in get_flashed_messages(category_filter=['ok']) %}
+        <h4 style="color: green">{{ message }}</h4>
+    {% endfor %}
+    <div class="col-md-12 text-center">
+        <h1>相册推荐</h1>
+        {% for item in recmm_albums %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("album_browse",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span> 图片量({{ item.photonum }})</span>
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>相册首发</h1>
+        {% for item in newest_albums %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("album_browse",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span> 图片量({{ item.photonum }})</span>
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>最火相册</h1>
+        {% for item in hotest_albums %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("album_browse",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span> 图片量({{ item.photonum }})</span>
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-6").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}
+

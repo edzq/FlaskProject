@@ -1,0 +1,38 @@
+{% extends "home/layout.html" %}
+{% import "home/macro_paginate.html" as paginator %}
+{% block content %}
+
+    <div class="jumbotron" style="padding: 5px 20px">
+        <h2>{{ session.get("user_name") }}的个人中心</h2>
+    </div>
+
+    <div>
+        {% include "home/user_menu.html" %}
+
+        <div class="col-md-10 text-center">
+            {% for item in oxes %}
+                <div class="col-md-3">
+                    <a href="{{ url_for("home.user_index",id=item.id) }}">
+                        <img src="{{ item.face_url }}" class="img-circle"
+                             width="100%" height="150px">
+                    </a>
+                    <br>
+                    <p style="font-size: 17px">{{ item.name }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#item-12").addClass('list-group-item-success');
+            }
+        );
+    </script>
+{% endblock %}

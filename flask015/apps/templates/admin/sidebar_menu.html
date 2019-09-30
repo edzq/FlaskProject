@@ -1,0 +1,128 @@
+<!-- sidebar menu: : style can be found in sidebar.less -->
+<ul class="sidebar-menu" data-widget="tree">
+    <li class="header">主要功能菜单</li>
+    <li id="menu-1" class="treeview">
+        <a href="#">
+            <i class="fa fa-dashboard"></i> <span>首页</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">1</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.index') }}"><i class="fa fa-circle-o"></i> 控制面板</a></li>
+        </ul>
+    </li>
+    <li id="menu-2" class="treeview">
+        <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>文章管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.article_tag',page=1) }}"><i class="fa fa-tags"></i> 文章标签</a></li>
+            <li><a href="{{ url_for('admin.article_list',page=1) }}"><i class="fa fa-book"></i> 文章列表</a></li>
+        </ul>
+    </li>
+    <li id="menu-3" class="treeview">
+        <a href="#">
+            <i class="fa fa-file-image-o"></i>
+            <span>相册管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.album_tag',page=1) }}"><i class="fa fa-tags"></i> 相册标签</a></li>
+            <li><a href="{{ url_for('admin.album_list',page=1) }}"><i class="fa fa-image"></i> 相册列表</a></li>
+        </ul>
+    </li>
+    <li id="menu-4" class="treeview">
+        <a href="#">
+            <i class="fa fa-music"></i>
+            <span>音乐管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">4</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.music_tag',page=1) }}"><i class="fa fa-tags"></i> 音乐标签</a></li>
+            <li><a href="{{ url_for('admin.music_add') }}"><i class="fa fa-file-audio-o"></i> 音乐添加</a></li>
+            <li><a href="{{ url_for('admin.music_list',page=1) }}"><i class="fa fa-file-audio-o"></i> 音乐列表</a></li>
+            <li><a href="{{ url_for('admin.music_comments',page=1) }}"><i class="fa fa-comment-o"></i> 音乐评论</a></li>
+        </ul>
+    </li>
+    <li id="menu-5" class="treeview">
+        <a href="#">
+            <i class="fa fa-film"></i>
+            <span>电影管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">4</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.movie_tag',page=1) }}"><i class="fa fa-tags"></i> 电影标签</a></li>
+            <li><a href="{{ url_for('admin.movie_add') }}"><i class="fa fa-file-movie-o"></i> 电影添加</a></li>
+            <li><a href="{{ url_for('admin.movie_list',page=1) }}"><i class="fa fa-file-movie-o"></i> 电影列表</a></li>
+            <li><a href="{{ url_for('admin.movie_comments',page=1) }}"><i class="fa fa-comment-o"></i> 电影评论</a></li>
+        </ul>
+    </li>
+    <li id="menu-6" class="treeview">
+        <a href="#">
+            <i class="fa fa-users"></i> <span>会员管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">1</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.user_list',page=1) }}"><i class="fa fa-user"></i> 会员列表</a></li>
+        </ul>
+    </li>
+    <li id="menu-7" class="treeview">
+        <a href="#">
+            <i class="fa fa-file-text"></i> <span>日志管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.operatelog_list',page=1) }}"><i class="fa fa-circle-o"></i> 操作日志列表</a></li>
+            <li><a href="{{ url_for('admin.loginlog_list',page=1) }}"><i class="fa fa-circle-o"></i> 登录日志列表</a></li>
+        </ul>
+    </li>
+    <li id="menu-8" class="treeview">
+        <a href="#">
+            <i class="fa fa-lock"></i> <span>权限管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for("admin.admin_auths",page=1) }}"><i class="fa fa-circle-o"></i> 权限添加和查看</a></li>
+        </ul>
+    </li>
+    <li id="menu-9" class="treeview">
+        <a href="#">
+            <i class="fa fa-user-secret"></i> <span>角色管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for("admin.admin_roles",page=1) }}"><i class="fa fa-circle-o"></i> 角色添加和查看</a></li>
+        </ul>
+    </li>
+    <li id="menu-10" class="treeview">
+        <a href="#">
+            <i class="fa fa-user-circle"></i> <span>管理员管理</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{{ url_for('admin.admin_add') }}"><i class="fa fa-circle-o"></i> 管理员添加</a></li>
+            <li><a href="{{ url_for('admin.admin_list',page=1) }}"><i class="fa fa-circle-o"></i> 管理员列表</a></li>
+        </ul>
+    </li>
+</ul>

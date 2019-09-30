@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron">
+        <h1>Flask example</h1>
+        <p>This example is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work.
+            It includes the responsive CSS and HTML, so it also adapts to your viewport and device.
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-1").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}
+

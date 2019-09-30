@@ -1,0 +1,156 @@
+{% extends "layout.html" %}
+
+{% block css_style %}
+    <link href="{{ url_for("static", filename="custom/custom.css") }}"
+          rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+
+        <div class="col-md-8">
+            <h2 class="news-title">
+                {{ article.title }}
+            </h2>
+            <div class="news-status">
+                <span><span class="avatar"><img src="{{ userface_url }}"></span>
+                    作者({{ article.user.name }})</span> ⋅
+                <span>浏览量({{ article.clicknum }})</span> ⋅
+                <span>收藏量({{ article.favornum }})</span> ⋅
+                <span>发布时间({{ article.addtime }})</span>
+                <div id="btn-favor" class="btn btn-default">
+                    点我收藏吧
+                </div>
+            </div>
+            <div class="news-content">
+                <blockquote>
+                    <p>
+                        {{ article.abstract }}
+                    </p>
+                </blockquote>
+                <div>
+                    {{ article.content | safe  }}
+                </div>
+            </div>
+            <a href="#" class="text-lg">回到顶部</a>
+        </div>
+
+        <div class="col-md-4">
+            <div class="side-bar-card">
+                <div class="card-title">相关推荐</div>
+                <div class="card-body">
+                    <div class="list">
+                        {% for item in recommed__articles %}
+                            <div class="item clearfix">
+                                <div class="col-xs-5 no-padding-h">
+                                    <a href="{{ url_for('article_read',id=item.id) }}">
+                                        <img src="{{ item.coverimgurl }}">
+                                    </a>
+                                </div>
+                                <div class="col-xs-7">
+                                    <a href="{{ url_for('article_read',id=item.id) }}">
+                                        <div class="title">{{ item.title }}</div>
+                                        <div class="desc">{{ item.clicknum }}浏览⋅
+                                            {{ item.favornum }}收藏
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-bar-card">
+                {% if session.get('user_name') %}
+                    <div class="card-title">我的收藏</div>
+                    <div class="card-body">
+                        <div class="list">
+                            {% for item in favor_articles %}
+                                <div class="item clearfix">
+                                    <div class="col-xs-5 no-padding-h">
+                                        <a href="{{ url_for('article_read',id=item.id) }}">
+                                            <img src="{{ item.coverimgurl }}">
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <a href="{{ url_for('article_read',id=item.id) }}">
+                                            <div class="title">{{ item.title }}</div>
+                                            <div class="desc">{{ item.clicknum }}浏览⋅
+                                                {{ item.favornum }}收藏
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card-title">广告栏</div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $('#btn-favor').click(
+                function () {
+                    var uid = {{ session.get('user_id', -1) }};
+                    var aid = {{ article.id }};
+                    var act = 'add';
+                    if (uid == -1)
+                        alert('请登录再收藏！');
+                    else {
+                        if ($('#btn-favor').text() == '已经收藏过') {
+                            act = 'del';
+                            $.ajax({
+                                url: '{{ url_for('article_favor') }}',
+                                type: 'GET',
+                                data: 'aid=' + aid + '&uid=' + uid + '&act=' + act,
+                                dataType: 'json',
+                                success: function (res) {
+                                    if (res.ok == 1)
+                                        $('#btn-favor').text('收藏成功');
+                                    if (res.ok == 0)
+                                        $('#btn-favor').text('已经收藏过');
+                                    if (res.ok == 2) {
+                                        alert('收藏已经取消！');
+                                        $('#btn-favor').text('点我收藏吧')
+                                    }
+                                }
+                            })
+                        }
+                        else {
+                            act = 'add';
+                            $.ajax({
+                                url: '{{ url_for('article_favor') }}',
+                                type: 'GET',
+                                data: 'aid=' + aid + '&uid=' + uid + '&act=' + act,
+                                dataType: 'json',
+                                success: function (res) {
+                                    if (res.ok == -1)
+                                        alert('不要收藏自己的文章！');
+                                    if (res.ok == 1)
+                                        $('#btn-favor').text('收藏成功');
+                                    if (res.ok == 0)
+                                        $('#btn-favor').text('已经收藏过');
+                                    if (res.ok == 2) {
+                                        alert('收藏已经取消！');
+                                        $('#btn-favor').text('点我收藏吧')
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            )
+        })
+    </script>
+{% endblock %}

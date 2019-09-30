@@ -1,0 +1,267 @@
+{% extends "home/layout.html" %}
+
+{% block css_style %}
+    <link href="{{ url_for("static", filename="custom/custom.css") }}"
+          rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+
+        <div class="col-md-8">
+            <h2 class="news-title">
+                {{ article.title }}
+            </h2>
+            <div class="news-status">
+                <span>
+                    <a href="{{ url_for("home.user_index",id=article.user.id) }}">
+                    <span class="avatar"><img src="{{ userface_url }}"></span>
+                    作者({{ article.user.name }})</a></span> ⋅
+                <span>浏览量({{ article.clicknum }})</span> ⋅
+                <span>收藏量({{ article.favornum }})</span> ⋅
+                <span>发布时间({{ article.addtime }})</span>
+                <div id="btn-favor" class="btn btn-default">
+                    点我收藏吧
+                </div>
+            </div>
+            <div class="news-content">
+                <blockquote>
+                    <p>
+                        {{ article.abstract }}
+                    </p>
+                </blockquote>
+                <div>
+                    {{ article.content | safe }}
+                </div>
+            </div>
+            <a href="#" class="text-lg">回到顶部</a>
+        </div>
+
+        <div class="col-md-4">
+            <div class="side-bar-card">
+                <div class="card-title">相关推荐</div>
+                <div class="card-body">
+                    <div class="list">
+                        {% for item in recommed__articles %}
+                            <div class="item clearfix">
+                                <div class="col-xs-5 no-padding-h">
+                                    <a href="{{ url_for('home.article_read',id=item.id) }}">
+                                        <img src="{{ item.coverimgurl }}">
+                                    </a>
+                                </div>
+                                <div class="col-xs-7">
+                                    <a href="{{ url_for('home.article_read',id=item.id) }}">
+                                        <div class="title">{{ item.title }}</div>
+                                        <div class="desc">{{ item.clicknum }}浏览⋅
+                                            {{ item.favornum }}收藏
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-bar-card">
+                {% if session.get('user_name') %}
+                    <div class="card-title">我的收藏</div>
+                    <div class="card-body">
+                        <div class="list">
+                            {% for item in favor_articles %}
+                                <div class="item clearfix">
+                                    <div class="col-xs-5 no-padding-h">
+                                        <a href="{{ url_for('home.article_read',id=item.id) }}">
+                                            <img src="{{ item.coverimgurl }}">
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <a href="{{ url_for('home.article_read',id=item.id) }}">
+                                            <div class="title">{{ item.title }}</div>
+                                            <div class="desc">{{ item.clicknum }}浏览⋅
+                                                {{ item.favornum }}收藏
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card-title">广告栏</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!--文章评论区域-->
+        <div class="col-md-12" style="margin-top: 5px">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-comment"></i>&nbsp;文章评论
+                    </h3>
+                </div>
+                {% if "user_name" not in session %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>请先<a href="{{ url_for("home.user_login") }}"
+                                     target="_blank" class="text-info">登录</a>，才可参与评论！
+                        </strong>
+                    </div>
+                {% else %}
+                    <div>
+                        <textarea id="comment_content" style="width: 100%" rows="3"></textarea>
+                        <button class="btn-success" id="btn-comment">提交评论</button>
+                    </div>
+                {% endif %}
+                <!--下面是评论列表-->
+                <ol class="breadcrumb" style="margin-top:3px;">
+                    <li>全部评论({{ article.commtnum }})</li>
+                </ol>
+                <ul id="cmmtList" class="commentList">
+                    <li style="display: none;"></li>
+                    {% for cmmt in article_comments %}
+                        <li class="item cl">
+                            <a href="{{ url_for("home.user_index",id=cmmt.user.id) }}">
+                                <i class="avatar size-L radius">
+                                    <img src="{{ cmmt.userface_url }}"
+                                         class="img-circle" style="border:1px solid #abcdef;
+                                         width: 50px;height: 50px;">
+                                </i>
+                            </a>
+                            <div class="comment-main">
+                                <header class="comment-header">
+                                    <div class="comment-meta">
+                                        <a class="comment-author">{{ cmmt.user.name }}</a>
+                                        评论于
+                                        <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">
+                                            {{ cmmt.addtime }}
+                                        </time>
+                                    </div>
+                                </header>
+                                <div class="comment-body">
+                                    {{ cmmt.comment | safe }}
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <!--文章评论区域-->
+
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    {#    负责文章收藏#}
+    <script>
+        $(document).ready(function () {
+            $('#btn-favor').click(
+                function () {
+                    var uid = {{ session.get('user_id', -1) }};
+                    var aid = {{ article.id }};
+                    var act = 'add';
+                    if (uid == -1)
+                        alert('请登录再收藏！');
+                    else {
+                        if ($('#btn-favor').text() == '已经收藏过') {
+                            act = 'del';
+                            $.ajax({
+                                url: '{{ url_for('home.article_favor') }}',
+                                type: 'GET',
+                                data: 'aid=' + aid + '&uid=' + uid + '&act=' + act,
+                                dataType: 'json',
+                                success: function (res) {
+                                    if (res.ok == 1)
+                                        $('#btn-favor').text('收藏成功');
+                                    if (res.ok == 0)
+                                        $('#btn-favor').text('已经收藏过');
+                                    if (res.ok == 2) {
+                                        alert('收藏已经取消！');
+                                        $('#btn-favor').text('点我收藏吧')
+                                    }
+                                }
+                            })
+                        }
+                        else {
+                            act = 'add';
+                            $.ajax({
+                                url: '{{ url_for('home.article_favor') }}',
+                                type: 'GET',
+                                data: 'aid=' + aid + '&uid=' + uid + '&act=' + act,
+                                dataType: 'json',
+                                success: function (res) {
+                                    if (res.ok == -1)
+                                        alert('不要收藏自己的文章！');
+                                    if (res.ok == 1)
+                                        $('#btn-favor').text('收藏成功');
+                                    if (res.ok == 0)
+                                        $('#btn-favor').text('已经收藏过');
+                                    if (res.ok == 2) {
+                                        alert('收藏已经取消！');
+                                        $('#btn-favor').text('点我收藏吧')
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            )
+        })
+    </script>
+    {#    负责文章收藏#}
+
+    {#    负责文章评论#}
+    <script src='{{ url_for('static',filename='tinymce/tinymce.min.js') }}'></script>
+    <script>
+        tinymce.init({
+            selector: '#comment_content',
+            height: 120,
+            plugins: 'advlist lists',
+            toolbar: ['undo redo | styleselect | bold italic | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist | outdent indent | ' +
+            'fontselect fontsizeselect'],
+            menubar: false,
+            statusbar: false,
+            themes: "modern",
+            skin: "lightgray",
+            language: 'zh_CN'
+        });
+        $(document).ready(function () {
+            $("#btn-comment").click(function () {
+                var uid = '{{ session.get('user_id') }}';
+                var aid = '{{ article.id }}';
+                var content = tinymce.activeEditor.getContent();
+                if (content == '') {
+                    alert("请输入评论内容！")
+                } else if(uid=='{{ article.user.id }}'){
+                    alert("不要评论自己的文章！")
+                } else {
+                    $.ajax(
+                        {
+                            url: '{{ url_for("home.article_comment") }}',
+                            type: 'GET',
+                            data: 'aid=' + aid + '&uid=' + uid + '&content=' + content,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.ok == 1) {
+                                    $("#cmmtList li").eq(0).before(res.cmmLi);
+                                }
+                                if (res.ok == 0)
+                                    alert("评论添加失败！");
+                            }
+                        }
+                    );
+                }
+            });
+        })
+    </script>
+    {#    负责文章评论#}
+{% endblock %}

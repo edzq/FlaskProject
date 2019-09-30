@@ -1,0 +1,129 @@
+{% extends "home/layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 10px 20px">
+        <h2>文章首页</h2>
+        <p>
+            在这里你可以上传，管理，分享自己的文章，也可以浏览，收藏，评论别人的文章！
+        </p>
+        <a href="{{ url_for('home.article_create') }}" style="display: inline-block" class="btn btn-primary">
+            创建新的文章
+        </a>
+        <a href="{{ url_for('home.article_write') }}" style="display: inline-block" class="btn btn-primary">
+            更新已有文章
+        </a>
+        <a href="{{ url_for("home.article_list",page=1) }}" style="display: inline-block"
+           class="btn btn-primary">
+            文章列表
+        </a>
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>文章推荐</h1>
+        {% for item in recmm_articles %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("home.article_read",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>文章首发</h1>
+        {% for item in newest_articles %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("home.article_read",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>最火文章</h1>
+        {% for item in hotest_articles %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ item.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                            {{ item.user.name }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for("home.article_read",id=item.id) }}">
+                                    <img src="{{ item.coverimgurl }}"
+                                         width="250px" height="150px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>浏览量({{ item.clicknum }}) </span>
+                                <span> 收藏量({{ item.favornum }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-7").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}
+

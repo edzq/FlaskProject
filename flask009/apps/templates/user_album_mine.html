@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% import "macro_paginate.html" as paginator %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 5px 20px">
+        <h2>{{ session.get("user_name") }}的个人中心</h2>
+    </div>
+
+    <div>
+        {% include "user_menu.html" %}
+
+        <div class="container">
+
+            <a style="display: inline-block;font-size: x-large;
+        margin: 5px 5px" href="{{ url_for("user_album_mine",page=1) }}">所有分类</a>
+            {% for item in albumtags %}
+                <a style="display: inline-block;font-size: larger;margin: 5px 5px"
+                   href="{{ url_for("user_album_mine",page=1,tag=item.id) }}">
+                    {{ item.name }}
+                </a>
+            {% endfor %}
+
+            {% for item in albums.items %}
+                <div class="col-md-3">
+                    <div class="media-card">
+                        <div class="panel panel-body" style="display: block;padding: 3px;">
+                            <div class="card-title">
+                                    <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                                        {{ item.title }}
+                                    </span>
+                                <span style="font-size: small;font-weight: 600;color: #0c0c0c">>
+                                        {{ item.user.name }}
+                                    </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-image">
+                                    <a href="{{ url_for("album_browse",id=item.id) }}">
+                                        <img src="{{ item.coverimgurl }}"
+                                             width="250px" height="150px">
+                                    </a>
+                                </div>
+                                <div class="card-status" style="font-weight: 800;color: #2c4762">
+                                    <a href="{{ url_for("user_album_mine_modify",id=item.id) }}">
+                                        修改信息
+                                    </a>
+                                    <a href="{{ url_for("user_album_mine_photo_add",id=item.id) }}">
+                                        增删图片
+                                    </a>
+                                    <a href="{{ url_for('user_album_mine_del',id=item.id) }}">
+                                        删除相册
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="col-md-12 text-center">
+                {{ paginator.paginate(albums,"user_album_mine") }}
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#item-5").addClass('list-group-item-success')
+            }
+        );
+    </script>
+{% endblock %}

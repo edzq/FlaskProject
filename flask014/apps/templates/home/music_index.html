@@ -1,0 +1,302 @@
+{% extends "home/layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 10px 20px">
+        <h2>音乐首页</h2>
+        <p>
+            在这里你可以浏览，收藏，评论音乐！
+        </p>
+        <a href="{{ url_for("home.music_list",page=1) }}" style="display: inline-block"
+           class="btn btn-primary">
+            音乐列表
+        </a>
+    </div>
+    <div id="player_canvas" class="col-md-12"
+         style="height:150px;border: dashed;display: none">
+        {#            <canvas width="58.3%" height="380px"></canvas>#}
+    </div>
+    <div class="col-md-12 text-center">
+        <h1>音乐推荐</h1>
+        {% for ritem in recmd_musics %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ ritem.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">&gt;
+                            {{ ritem.singer }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image" id="card-image-r-{{ ritem.id }}"
+                                 style="display: inline-block;width: 250px;height: 180px">
+                                <a href="{{ url_for('home.music_listen',id=ritem.id) }}">
+                                    <img src="{{ ritem.cover_url }}"
+                                         width="250px" height="180px">
+                                </a>
+                            </div>
+                            <div class="card-canvas" id="card-canvas-r-{{ ritem.id }}"
+                                 style="display: none;width: 250px;height: 180px">
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>播放量({{ ritem.clicknum }}) </span>
+                                <span> 收藏量({{ ritem.favornum }})</span>
+                                <span> 评论量({{ ritem.commtnum }})</span>
+                            </div>
+                            <div>
+                                <audio src="{{ ritem.audio_url }}"
+                                       controls="controls" preload="none" style="width: 250px"></audio>
+                            </div>
+                            <div>
+                                <button class="loadmusic" name="{{ ritem.id }}"
+                                        title="{{ ritem.audio_url }}">加载
+                                </button>
+                                <button class="playmusic" name="{{ ritem.id }}">播放</button>
+                                <button class="pausemusic" name="{{ ritem.id }}">暂停</button>
+                                <button class="continuemusic" name="{{ ritem.id }}">继续</button>
+                                <button class="stopmusic" name="{{ ritem.id }}">停止</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>音乐首发</h1>
+        {% for ritem in newest_musics %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ ritem.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">&gt;
+                            {{ ritem.singer }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for('home.music_listen',id=ritem.id) }}">
+                                    <img src="{{ ritem.cover_url }}"
+                                         width="250px" height="180px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>播放量({{ ritem.clicknum }}) </span>
+                                <span> 收藏量({{ ritem.favornum }})</span>
+                                <span> 评论量({{ ritem.commtnum }})</span>
+                            </div>
+                            <div>
+                                <audio src="{{ ritem.audio_url }}"
+                                       controls="controls" preload="none" style="width: 250px"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-12 text-center">
+        <h1>最火音乐</h1>
+        {% for ritem in hotest_musics %}
+            <div class="col-md-3">
+                <div class="media-card">
+                    <div class="panel panel-body" style="display: block;padding: 3px;">
+                        <div class="card-title">
+                        <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                            {{ ritem.title }}
+                        </span>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">&gt;
+                            {{ ritem.singer }}
+                        </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-image">
+                                <a href="{{ url_for('home.music_listen',id=ritem.id) }}">
+                                    <img src="{{ ritem.cover_url }}"
+                                         width="250px" height="180px">
+                                </a>
+                            </div>
+                            <div class="card-status" style="font-size: small; font-weight: 500;color: #2c4762">
+                                <span>播放量({{ ritem.clicknum }}) </span>
+                                <span> 收藏量({{ ritem.favornum }})</span>
+                                <span> 评论量({{ ritem.commtnum }})</span>
+                            </div>
+                            <div>
+                                <audio src="{{ ritem.audio_url }}"
+                                       controls="controls" preload="none" style="width: 250px"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    {#    负责音乐可视化#}
+    <script src="{{ url_for('static',filename='webaudio/MusicVisualizer.js') }}"></script>
+    <script>
+        //创建音乐可视化类对象 MusicVisualizer
+        var visualDomian = 'time';
+        var size = 512;
+        var mv = new MusicVisualizer({
+            visual_domain: visualDomian,
+            size: size,
+            drawMusicOnCanvas: DrawMusicOnCanvas
+        });
+        //获取canvas的相关DOM元素，对其进行初始设置
+        var playerCanvas = $("#player_canvas")[0];
+        var cvsXpos, cvsYpos, cvsHeight, cvsWidth;
+        var canvas = document.createElement("canvas");
+        playerCanvas.appendChild(canvas);
+        //绘图上下文句柄，操作各种绘图工具绘图的句柄
+        var ctx = canvas.getContext("2d");
+        //当页面被缩放后，获取Canvas窗口的实际大小
+        function resizeCanvas() {
+            cvsXpos = playerCanvas.clientX;
+            cvsYpos = playerCanvas.clientY;
+            cvsHeight = playerCanvas.clientHeight;
+            cvsWidth = playerCanvas.clientWidth;
+            canvas.width = cvsWidth;
+            canvas.height = cvsHeight;
+        }
+        resizeCanvas();
+        window.onresize = resizeCanvas();
+        var drawType = "waves";
+        //把接收到的每一帧的数据绘制在Canvas上，根据不同的风格选择不同的绘制方案
+        function DrawMusicOnCanvas(arr) {
+            //绘制波形图
+            if (drawType == "waves") {
+                ctx.clearRect(0, 0, cvsWidth, cvsHeight);//清除上一帧的图像，不然会叠加
+                //设置线性填充风格
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgb(0,0,0)";//generateRandomColor()
+                ctx.beginPath();
+                var sliceWidth = cvsWidth * 1.0 / (2 * size);
+                var x = 0;
+                for (var i = 0; i < (2 * size); i++) {
+
+                    var v = arr[i] / 128;
+                    var y = cvsHeight - v * cvsHeight / 2;
+
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+
+                    x += sliceWidth;
+                }
+
+                ctx.lineTo(cvsWidth, cvsHeight / 2);
+                ctx.stroke();
+            }
+            //绘制柱状分布直方图
+            if (drawType == "bars") {
+                ctx.clearRect(0, 0, cvsWidth, cvsHeight);//清除上一帧的图像，不然会叠加
+                //设置线性填充风格
+                var line = ctx.createLinearGradient(0, 0, 0, cvsHeight);
+                line.addColorStop(0, "red");
+                line.addColorStop(0.5, "yellow");
+                line.addColorStop(1, "green");
+                ctx.fillStyle = line;
+                //开始绘制频率分布的柱状图
+                var binWidth = cvsWidth / size;
+                for (var i = 0; i < size; i++) {
+                    var h = arr[i] / 256 * cvsHeight;
+                    ctx.fillRect(i * binWidth, cvsHeight - h, binWidth * 0.6, h)
+                }
+            }
+        }
+        //正在播放的音乐的url和id
+        var audio_url = '';
+        var audio_id = '';
+
+        $(document).ready(
+            function () {
+                $("#nav-8").addClass('active');
+                $(".loadmusic").click(function () {
+                    if (mv.audioState == "playing")
+                        return;
+                    if (audio_url == this.title)
+                        reurn
+                    mv.load(audio_url = this.title);
+                    audio_url = this.title;
+                    audio_id = this.name;
+                });
+                $(".playmusic").click(function () {
+                    if (mv.audioState == "playing")
+                        return;
+                    if (mv.audioState == "paused")
+                        return;
+                    if (audio_id != this.name)
+                        return;
+                    $("#card-image-r-" + this.name).hide();
+                    $("#card-canvas-r-" + this.name).show();
+                    if (mv.audioState == 'decoded') {
+                        playerCanvas = $("#card-canvas-r-" + this.name)[0];
+                        canvas = document.createElement("canvas");
+                        playerCanvas.appendChild(canvas);
+                    }
+                    //绘图上下文句柄，操作各种绘图工具绘图的句柄
+                    ctx = canvas.getContext("2d");
+                    resizeCanvas();
+                    //绘图上下文句柄，操作各种绘图工具绘图的句柄
+                    mv.play();
+                });
+                $(".pausemusic").click(function () {
+                    if (mv.audioState != "playing")
+                        return;
+                    if (audio_id != this.name)
+                        return;
+                    $("#card-image-r-" + this.name).show();
+                    $("#card-canvas-r-" + this.name).hide();
+                    mv.pause();
+                });
+                $(".continuemusic").click(function () {
+                    if (mv.audioState != "paused")
+                        return;
+                    if (audio_id != this.name)
+                        return;
+                    $("#card-image-r-" + this.name).hide();
+                    $("#card-canvas-r-" + this.name).show();
+                    mv.continue();
+                });
+                $(".stopmusic").click(function () {
+                    if (mv.audioState != "playing")
+                        return;
+                    if (audio_id != this.name)
+                        return;
+                    $("#card-image-r-" + this.name).show();
+                    $("#card-canvas-r-" + this.name).hide();
+                    mv.stop();
+                });
+                $(".card-canvas").click(function () {
+                    if (visualDomian == "time") {
+                        visualDomian = "frequency";
+                        size = 64;
+                        drawType = 'bars';
+                    }
+                    else {
+                        visualDomian = "time";
+                        size = 512;
+                        drawType = 'waves';
+                    }
+                    //切换可视化域
+                    mv.switchDomain(visualDomian, size)
+                });
+            }
+        );
+    </script>
+{% endblock %}
+

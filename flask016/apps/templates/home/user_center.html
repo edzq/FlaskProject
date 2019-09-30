@@ -1,0 +1,43 @@
+{% extends "home/layout.html" %}
+
+{% block css_style %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='custom/timeline.css') }}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 5px 20px">
+        <h2>{{ session.get("user_name") }}的个人中心</h2>
+    </div>
+
+    <div>
+        {% include "home/user_menu.html" %}
+
+        <div class="col-md-10">
+            <!-- The time line -->
+            <ul class="timeline">
+
+                {{ timeline_items_str | safe }}
+
+                <li>
+                    <i class="fa fa-clock-o bg-gray"></i>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#nav-2").addClass('active')
+            }
+        );
+    </script>
+{% endblock %}

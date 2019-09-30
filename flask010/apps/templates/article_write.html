@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block css_style %}
+
+{% endblock %}
+
+{% block content %}
+    <h2 class="page-header">创建文章/文章写作</h2>
+    <div class="col-md-12">
+        <form role="form" method="post">
+            <div class="form-group">
+                {{ form.article_title.label }}
+                {{ form.article_title }}
+                {% for err in form.article_title.errors %}
+                    <p style="color: red">{{ err }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.article_content.label }}
+                {{ form.article_content }}
+                {% for err in form.article_content.errors %}
+                    <p style="color: red">{{ err }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.csrf_token }}
+                {{ form.submit }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block js_code %}
+    <script src="https://cdn.ckeditor.com/4.7.3/standard-all/ckeditor.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#article_title").change(
+                function () {
+                    var value = $("#article_title").val();
+                    {#                    var text = $("#article_title").find("option:selected").text();#}
+                    window.location = "{{ url_for("article_write") }}?aid=" + value;
+                }
+            );
+
+            var editor = CKEDITOR.replace('article_content', {
+                toolbar: [
+                    {name: 'clipboard', items: ['Undo', 'Redo', 'Paste', 'PasteFromWord']},
+                    {name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize']},
+                    {name: 'colors', items: ['TextColor', 'BGColor']},
+                    {name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']},
+                    {
+                        name: 'paragraph',
+                        items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
+                    },
+                    {name: 'links', items: ['Link', 'Unlink']},
+                    {name: 'insert', items: ['Image', 'EmbedSemantic', 'Table']},
+                    {name: 'tools', items: ['Maximize']},
+                    {name: 'editing', items: ['Scayt']},
+                    {name: 'align', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+                ],
+                customConfig: '',
+                extraPlugins: 'autoembed,embedsemantic,image2,uploadimage,uploadfile,font,' +
+                'justify,colorbutton,save,autogrow,codesnippet',
+                autoGrow_minHeight: 200,
+                autoGrow_maxHeight: 1000,
+                autoGrow_bottomSpace: 50,
+                removePlugins: 'image',
+                removeDialogTabs: 'image:advanced;link:advanced',
+                contentsCss: ['https://cdn.ckeditor.com/4.7.3/standard-all/contents.css',
+                    '{{ url_for('static',filename='ckeditor/articlecss.css') }}'],
+                bodyClass: 'article-editor',
+                format_tags: 'p;h1;h2;h3;pre',
+                stylesSet: [
+                    /* Inline Styles */
+                    {name: 'Marker', element: 'span', attributes: {'class': 'marker'}},
+                    {name: 'Cited Work', element: 'cite'},
+                    {name: 'Inline Quotation', element: 'q'},
+                    /* Object Styles */
+                    {
+                        name: 'Special Container',
+                        element: 'div',
+                        styles: {
+                            padding: '5px 10px',
+                            background: '#eee',
+                            border: '1px solid #ccc'
+                        }
+                    },
+                    {
+                        name: 'Compact table',
+                        element: 'table',
+                        attributes: {
+                            cellpadding: '5',
+                            cellspacing: '0',
+                            border: '1',
+                            bordercolor: '#ccc'
+                        },
+                        styles: {
+                            'border-collapse': 'collapse'
+                        }
+                    },
+                    {
+                        name: 'Borderless Table',
+                        element: 'table',
+                        styles: {'border-style': 'hidden', 'background-color': '#E6E6FA'}
+                    },
+                    {name: 'Square Bulleted List', element: 'ul', styles: {'list-style-type': 'square'}},
+                    /* Widget Styles */
+                    // We use this one to style the brownie picture.
+                    {
+                        name: 'Illustration',
+                        type: 'widget',
+                        widget: 'image',
+                        attributes: {'class': 'image-illustration'}
+                    },
+                    // Media embed
+                    {name: '240p', type: 'widget', widget: 'embedSemantic', attributes: {'class': 'embed-240p'}},
+                    {name: '360p', type: 'widget', widget: 'embedSemantic', attributes: {'class': 'embed-360p'}},
+                    {name: '480p', type: 'widget', widget: 'embedSemantic', attributes: {'class': 'embed-480p'}},
+                    {name: '720p', type: 'widget', widget: 'embedSemantic', attributes: {'class': 'embed-720p'}},
+                    {name: '1080p', type: 'widget', widget: 'embedSemantic', attributes: {'class': 'embed-1080p'}}
+                ],
+
+                filebrowserImageUploadUrl: '{{ url_for('recieve_image') }}?aid='
+                + $("#article_title").val(),
+                filebrowserLinkUploadUrl: '{{ url_for('recieve_file') }}?aid='
+                + $("#article_title").val(),
+                filebrowserImageBrowseUrl: '{{ url_for('article_browse_file',type='images') }}',
+                filebrowserLinkBrowseUrl: '{{ url_for('article_browse_file',type='images') }}',
+                uploadUrl: '{{ url_for('recieve_dragged_pasted',type='files') }}&aid='
+                + $("#article_title").val(),
+                imageUploadUrl: '{{ url_for('recieve_dragged_pasted',type='images') }}&aid='
+                + $("#article_title").val()
+
+            });
+        })
+    </script>
+
+{% endblock %}

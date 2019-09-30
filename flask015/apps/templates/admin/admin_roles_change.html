@@ -1,0 +1,82 @@
+{% extends "admin/admin_layout.html" %}
+
+<!-- Content Wrapper. Contains page content -->
+{% block content_wrapper %}
+
+    <!-- /.content-wrapper -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1> Flask后台管理系统 </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 角色管理</a></li>
+                <li class="active">角色修改</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Horizontal Form -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">修改角色</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form class="form-horizontal" role="form" method="post">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="auth_name" class="col-sm-2 control-label">角色名称</label>
+                            <div class="col-sm-3">
+                                {{ form.role_name }}
+                                {% for errmsg in form.role_name.errors %}
+                                    <p style="color: red">{{ errmsg }}</p>
+                                {% endfor %}
+                            </div>
+                            <label for="auth_url" class="col-sm-2 control-label">权限列表</label>
+                            <div class="col-sm-3">
+                                {{ form.role_auths }}
+                                {% for errmsg in form.role_auths.errors %}
+                                    <p style="color: red">{{ errmsg }}</p>
+                                {% endfor %}
+                            </div>
+                            <div class="col-sm-2">
+                                {{ form.submit }}
+                                {{ form.csrf_token }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </form>
+
+                {% for msg in get_flashed_messages(category_filter=['error']) %}
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa fa-warning"></i> 失败！</h4>
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+                {% for msg in get_flashed_messages(category_filter=['ok']) %}
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa "></i> 成功！</h4>
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- /.box -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $("#menu-9").addClass('active')
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>浏览服务器文件</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap/bootstrap-theme.min.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="page-header">Flask服务器文件浏览</h1>
+    <div class="col-md-3">
+        <div class="list-group">
+            {% for item in albums %}
+                <div class="list-group-item">
+                    <a style="font-size: larger"
+                       href="{{ url_for('article_browse_file',
+                    type=type,CKEditorFuncNum=CKEditorFuncNum,
+                            aid=item.id) }}">
+                        {{ item.title }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-9">
+        <ul class="list-group">
+            {% for sphoto in selected_photos %}
+                <a class="list-group-item" style="margin-bottom: 3px"
+                   href="{{ url_for('article_browse_file',
+                    type=type,CKEditorFuncNum=CKEditorFuncNum,
+                            phid=sphoto.id) }}">
+                    <img src="{{ sphoto.url }}"
+                         width="120px" height="80px">
+                    <p style="float: right;font-size: large;">
+                        {{ sphoto.origname }}
+                    </p>
+                </a>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static',filename='bootstrap/bootstrap.min.js') }}"></script>
+</body>
+</html>

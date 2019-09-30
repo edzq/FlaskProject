@@ -1,0 +1,64 @@
+{% extends "home/layout.html" %}
+{% import "home/macro_paginate.html" as paginator %}
+{% block content %}
+
+    <div class="jumbotron" style="padding: 5px 20px">
+        <h2>{{ session.get("user_name") }}的个人中心</h2>
+    </div>
+
+    <div>
+        {% include "home/user_menu.html" %}
+
+        <div class="col-md-10">
+
+            <div class="list-group">
+                {% for item in musics.items %}
+                    <div class="list-group-item clearfix">
+                        <div class="col-xs-2">
+                            <a href="{{ url_for("home.music_listen",id=item.id) }}">
+                                <img src="{{ item.coverimgurl }}" width="100px" height="60px">
+                            </a>
+                        </div>
+                        <div class="col-xs-8">
+                            <a href="{{ url_for("home.music_listen",id=item.id) }}">
+                                <span style="font-size: large;font-weight: bold;color: #0c0c0c">
+                                {{ item.title }}</span>
+                            </a><br>
+                            <span style="font-size: small;font-weight: 600;color: #0c0c0c">
+                                <i class="glyphicon glyphicon-user"></i>
+                                歌手：{{ item.singer }} </span><i class="glyphicon glyphicon-apple"></i>
+                            <span>播放量：{{ item.clicknum }} </span><i class="glyphicon glyphicon-apple"></i>
+                            <span>收藏量：{{ item.favornum }}</span><i class="glyphicon glyphicon-apple"></i>
+                            <span>评论量：{{ item.commtnum }}</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <a style="display: inline-block;font-size: larger;color: red"
+                               href="{{ url_for('home.music_favor',mid=item.id,uid=session.get('user_id'),
+                                    act='cancel') }}">
+                                取消收藏
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="col-md-12 text-center">
+                    {{ paginator.paginate(musics,"home.user_music_favor") }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#item-9").addClass('list-group-item-success');
+            }
+        );
+    </script>
+{% endblock %}

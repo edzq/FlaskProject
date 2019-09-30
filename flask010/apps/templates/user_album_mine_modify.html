@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="jumbotron" style="padding: 5px 20px">
+        <h2>{{ session.get("user_name") }}的个人中心</h2>
+    </div>
+
+    <div>
+        {% include "user_menu.html" %}
+
+        <div class="container col-md-8">
+            {% for message in get_flashed_messages(category_filter=['err']) %}
+                <h4 style="color: red">{{ message }}</h4>
+            {% endfor %}
+            {% for message in get_flashed_messages(category_filter=['ok']) %}
+                <h4 style="color: green">{{ message }}</h4>
+            {% endfor %}
+
+            <form role="form" method="post">
+                <div class="form-group">
+                    {{ form.album_title.label }}
+                    {{ form.album_title }}
+                    {% for err in form.album_title.errors %}
+                        <p style="color: red">{{ err }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.album_desc.label }}
+                    {{ form.album_desc }}
+                    {% for err in form.album_desc.errors %}
+                        <p style="color: red">{{ err }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.album_privacy.label }}
+                    {{ form.album_privacy }}
+                    {% for err in form.album_privacy.errors %}
+                        <p style="color: red">{{ err }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.album_tag.label }}
+                    {{ form.album_tag }}
+                    {% for err in form.album_tag.errors %}
+                        <p style="color: red">{{ err }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.album_recmm.label }}
+                    {{ form.album_recmm }}
+                    {% for err in form.album_recmm.errors %}
+                        <p style="color: red">{{ err }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.csrf_token }}
+                    {{ form.submit }}
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(
+            function () {
+                $("#item-5").addClass('list-group-item-success')
+            }
+        );
+    </script>
+{% endblock %}

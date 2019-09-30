@@ -1,0 +1,117 @@
+{% extends "admin/admin_layout.html" %}
+{% import "admin/macro_paginate.html" as paginator %}
+<!-- Content Wrapper. Contains page content -->
+{% block content_wrapper %}
+
+    <!-- /.content-wrapper -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1> Flask后台管理系统 </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 音乐管理</a></li>
+                <li class="active">音乐列表</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            {% for msg in get_flashed_messages(category_filter=['error']) %}
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-warning"></i> 失败！</h4>
+                    {{ msg }}
+                </div>
+            {% endfor %}
+            {% for msg in get_flashed_messages(category_filter=['ok']) %}
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa "></i> 成功！</h4>
+                    {{ msg }}
+                </div>
+            {% endfor %}
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">音乐列表</h3>
+                    <div class="box-tools">
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>音乐编号</th>
+                            <th>音乐家</th>
+                            <th>音乐标题</th>
+                            <th>语种</th>
+                            <th>流派</th>
+                            <th>主题</th>
+                            <th>心情</th>
+                            <th>场景</th>
+                            <th>添加时间</th>
+                            <th>收听权限</th>
+                            <th>首页推荐</th>
+                            <th>点击/收藏/评论量</th>
+                            <th>相关操作</th>
+                        </tr>
+                        {% for item in musics.items %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.singer }}</td>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.music_lang_tag.name }}</td>
+                                <td>{{ item.music_style_tag.name }}</td>
+                                <td>{{ item.music_theme_tag.name }}</td>
+                                <td>{{ item.music_emotion_tag.name }}</td>
+                                <td>{{ item.music_scene_tag.name }}</td>
+                                <td>{{ item.addtime }}</td>
+                                <td> {{ item.privacy }}</td>
+                                <td>
+                                    {% if item.recommed == 1 %}
+                                        否
+                                    {% else %}
+                                        是
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.clicknum }}/{{ item.favornum }}/{{ item.commtnum }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin.music_listen',id=item.id) }}">
+                                        <span class="label label-success">查看</span>
+                                    </a>
+                                    <a href="{{ url_for('admin.music_change',id=item.id) }}">
+                                       <span class="label label-warning">修改</span>
+                                    </a>
+                                    <a href="{{ url_for('admin.music_del',id=item.id) }}">
+                                        <span class="label label-danger">删除</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    {{ paginator.paginate(musics,'admin.music_list') }}
+                </div>
+            </div>
+            <!-- /.box -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $("#menu-4").addClass('active')
+        })
+    </script>
+{% endblock %}
